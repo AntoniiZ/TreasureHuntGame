@@ -6,6 +6,6 @@ class Maze extends Phaser.Scene{
 
     }
     create(){
-
+      this.add.text(20, 20, "Maze...");
     }
 }
