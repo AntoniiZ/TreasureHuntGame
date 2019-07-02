@@ -8,8 +8,7 @@ var config = {
             debug: false
         }
     },
-    scene: [Start, Maze, End]
+    scene: [Load, Start, Maze, End]
 };
 
 var game = new Phaser.Game(config);
-
