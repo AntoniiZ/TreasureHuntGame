@@ -11,6 +11,7 @@ var config = {
     scene: [Load, Start, LoadTheGame, Maze, End]
 };
 
-
+var x = 96;
+var y = 416;
 
 var game = new Phaser.Game(config);
