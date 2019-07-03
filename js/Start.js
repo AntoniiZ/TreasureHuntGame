@@ -5,8 +5,10 @@ class Start extends Phaser.Scene{
 
     create(){
         this.background = this.add.image(0, 0, "background");
-        this.btn1 = this.add.image(512, 256, "play").setScale(0.2);
+        this.btn1 = this.add.image(512, 256, "play").setScale(1);
         this.btn1.setInteractive();
+
+        //this.background.setInteractive();
         this.input.on('gameobjectdown', this.StartGame, this);
     }
 
