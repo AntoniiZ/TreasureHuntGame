@@ -62,26 +62,24 @@ class Maze extends Phaser.Scene{
          }
       }
 
-
+      //hardcoded array for the moves of the hero
       this.arr = [];
-      this.arr[0] = 96;
-      this.arr[1] = 416;
-      this.arr[2] = 160;
-      this.arr[3] = 416;
-      this.arr[4] = 96;
-      this.arr[5] = 416;
-      this.arr[6] = 96;
-      this.arr[7] = 480;
-      this.arr[8] = 32;
-      this.arr[9] = 480;
-      //this.f = false;
+
+      this.arr[0] = {x: 1, y:0};
+      this.arr[1] = {x: 1, y:1};
+      this.arr[2] = {x: 2, y:1};
+      this.arr[3] = {x: 3, y:1};
+      this.arr[4] = {x: 3, y:0};
+      this.arr[5] = {x: 3, y:1};
+      this.arr[6] = {x: 2, y:1};
+      this.arr[7] = {x: 1, y:0};
+      this.arr[8] = {x: 0, y:0};
+      //counter for the array (this.arr[])
       this.i = 0;
 
     }
 
     moveHeroX(hero, x){
-      //x -= 1;
-      //var positionX = 96+64*x;
       if(hero.x == x){
         return;
       }else if(hero.x < x){
@@ -89,11 +87,9 @@ class Maze extends Phaser.Scene{
       }else if(hero.x > x){
         hero.x-=2;
       }
-
     }
 
     moveHeroY(hero, y){
-      //var positionY = 480 - 64*y;
       if(hero.y == y){
         return;
       }else if(hero.y > y){
@@ -101,17 +97,20 @@ class Maze extends Phaser.Scene{
       }else if(hero.y < y){
         hero.y += 2;
       }
-
-    }
-
-    wait(ms){
-      var d = new Date();
-      var d2 = null;
-      do { d2 = new Date(); }
-      while(d2-d < ms);
     }
 
     update(){
+
+      if(this.hero.x == x && this.hero.y == y){
+        console.log("yes");
+        if(this.i < this.arr.length){
+          x = 32 + 64*this.arr[this.i].x;
+          console.log(x);
+          y = 480 - 64*this.arr[this.i].y;
+          this.i++;
+          console.log(y);
+        }
+      }
 
       if(this.hero.x == x){
         this.moveHeroY(this.hero, y);
@@ -119,15 +118,5 @@ class Maze extends Phaser.Scene{
         this.moveHeroX(this.hero, x);
       }
 
-      if(this.hero.x == x && this.hero.y == y){
-        if(this.i < this.arr.length){
-          x = this.arr[this.i];
-          console.log(x);
-          this.i++;
-          y = this.arr[this.i];
-          this.i++;
-          console.log(y);
-        }
-      }
     }
 }
