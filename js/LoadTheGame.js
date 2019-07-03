@@ -5,7 +5,9 @@ class LoadTheGame extends Phaser.Scene{
     preload(){
         this.load.image('grass', 'assets/grass01.png');
         this.load.image('start', 'assets/start.png');
-        this.load.image('hero', 'assets/player.png')
+        this.load.image('hero', 'assets/player.png');
+        this.load.image('stone', 'assets/stone01.png');
+
     }
     create(){
         this.background = this.add.image(0, 0, "background");
