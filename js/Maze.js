@@ -2,10 +2,9 @@ class Maze extends Phaser.Scene{
     constructor(){
         super("maze");
     }
-    preload(){
 
-    }
     create(){
-      this.add.text(20, 20, "Maze...");
+      this.background = this.add.tileSprite(0, 0, config.width*4, config.height*4, "grass").setScale(0.5);
+      //this.background.setOrigin();
     }
 }
