@@ -44,6 +44,12 @@ class Maze extends Phaser.Scene{
       this.activeTrap = gameObject;
       this.end.setX(0);
       this.getNewRoute(this.hero.y, this.hero.x);
+
+      //console.log(this.i);
+      this.i = 0;
+      x = 32 + 64*this.arr[this.i].y;
+      y = 480 - 64*this.arr[this.i].x;
+
       this.f = true;
 
     }
@@ -141,25 +147,25 @@ class Maze extends Phaser.Scene{
 
     }
 
-    moveHeroX(hero, x){
-      if(hero.x == x){
+    moveHeroX(x){
+      if(this.hero.x == x){
         return;
-      }else if(hero.x < x){
-        hero.flipX = false;
-        hero.x+=4;
-      }else if(hero.x > x){
-        hero.flipX = true;
-        hero.x-=4;
+      }else if(this.hero.x < x){
+        this.hero.flipX = false;
+        this.hero.x+=4;
+      }else if(this.hero.x > x){
+        this.hero.flipX = true;
+        this.hero.x-=4;
       }
     }
 
-    moveHeroY(hero, y){
+    moveHeroY(y){
       if(this.hero.y == y){
         return;
-      } else if(hero.y > y){
+      } else if(this.hero.y > y){
         this.hero.y -= 4;
-      }else if(hero.y < y){
-        hero.y += 4;
+      }else if(this.hero.y < y){
+        this.hero.y += 4;
       }
     }
 
@@ -167,40 +173,39 @@ class Maze extends Phaser.Scene{
 
       if(this.hero.x == x && this.hero.y == y){
         if(this.i < this.arr.length){
+
           x = 32 + 64*this.arr[this.i].y;
-          //console.log(x);
           y = 480 - 64*this.arr[this.i].x;
           this.i++;
-          //console.log(y);
+          //console.log(x+"; "+y);
         }
       }
 
       if(this.hero.x == x){
-        this.moveHeroY(this.hero, y);
-      }else{
-        this.moveHeroX(this.hero, x);
+        this.moveHeroY(y);
+      } else {
+        this.moveHeroX(x);
       }
 
+
       if(this.f == true){
-        console.log("ok");
-        this.i = 0;
+        this.i = 1;
         this.f = false;
       }
 
       if(this.hero.x == 992 && this.hero.y == 32){
-        this.scene.remove("maze");
 
         sessionStorage.setItem(results, score);
 
         results++;
-
+        x = 32;
+        y = 480;
         this.scene.start("end");
 
       }
       else{
         score++;
       }
-      console.log("asdf");
 
     }
 
