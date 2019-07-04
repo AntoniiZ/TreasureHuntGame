@@ -183,18 +183,19 @@ class Maze extends Phaser.Scene{
                             numbers.setField(i - 1, j, valueOfCurrent + 1);
                             numbers.setPrev(i - 1, j, currentPoint);
                         }
-                        else if(i + 1 < config2.MAP_SIZE_Y && numbers.getFieldValue(i + 1, j) === 0){
-                            numbers.setField(i + 1, j, valueOfCurrent + 1);
-                            numbers.setPrev(i + 1, j, currentPoint);
-                        }
-                        else if(j > 0 && numbers.getFieldValue(i, j - 1) === 0){
-                            numbers.setField(i, j - 1, valueOfCurrent + 1);
-                            numbers.setPrev(i, j - 1, currentPoint);
-                        }
-                        else if(j + 1 < config2.MAP_SIZE_X && numbers.getFieldValue(i, j + 1) === 0){
+                        if(j + 1 < config2.MAP_SIZE_X && numbers.getFieldValue(i, j + 1) === 0){
                             numbers.setField(i, j + 1, valueOfCurrent + 1);
                             numbers.setPrev(i, j + 1, currentPoint);
                         }
+                        if(j > 0 && numbers.getFieldValue(i, j - 1) === 0){
+                            numbers.setField(i, j - 1, valueOfCurrent + 1);
+                            numbers.setPrev(i, j - 1, currentPoint);
+                        }
+                        if(i + 1 < config2.MAP_SIZE_Y && numbers.getFieldValue(i + 1, j) === 0){
+                            numbers.setField(i + 1, j, valueOfCurrent + 1);
+                            numbers.setPrev(i + 1, j, currentPoint);
+                        }
+
                     }
                 }
             }
