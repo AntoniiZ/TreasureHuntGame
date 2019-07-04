@@ -15,9 +15,34 @@ class Maze extends Phaser.Scene{
     setTrap(group, x, y){
       var positionX = (x*32) + 32*(x-1);
       var positionY = (y*32) + 32*(y-1);
-      var trap = this.add.sprite(positionX, positionY, 'rock').setScale(0.5);
-      group.add(trap);
+      var rock = this.add.sprite(positionX, positionY, 'rock').setScale(0.5);
+      var trap = new Trap(positionX, positionY, rock)
+      trap.get().setInteractive();
     }
+
+    unactivateTrap(pointer, gameObject){
+      //console.log(gameObject);
+      gameObject.setTexture("rock");
+    }
+
+    activateTrap(pointer, gameObject){
+      var positionX = (gameObject.x - 32)/64;
+      var positionY = 7 - (480 - gameObject.y)/64;
+
+      console.log(positionX + "; " + positionY);
+      this.field[positionY][positionX] = -1;
+      
+      if(this.activeTrap != null){
+        this.unactivateTrap(pointer, this.activeTrap);
+      }
+      gameObject.setTexture("rock2");
+      this.activeTrap = gameObject;
+
+
+
+    }
+
+
 
     create(){
       this.background = this.add.tileSprite(0, 0, config.width*4, config.height*4, "grass").setScale(0.5);
@@ -28,6 +53,7 @@ class Maze extends Phaser.Scene{
 
       this.traps = this.physics.add.group();
 
+      this.activeTrap = null;
 
       this.setTrap(this.traps, 2, 3);
       this.setTrap(this.traps, 3, 2);
@@ -45,8 +71,9 @@ class Maze extends Phaser.Scene{
       this.setTrap(this.traps, 15, 7);
 
 
+      this.input.on('gameobjectdown', this.activateTrap, this);
 
-      var field = [
+      this.field = [
         [ 0, 0,-1,-1, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0,-1, 0],
         [ 0, 0, 0, 0, 0,-1,-1,-1, 0, 0, 0,-1, 0, 0, 0, 0],
         [-1, 0,-1, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0,-1, 0, 0],
@@ -59,37 +86,16 @@ class Maze extends Phaser.Scene{
 
       for(let i = 0 ; i < 8; i ++){
         for(let j = 0; j < 16; j++){
-             if(field[i][j] === -1){
+             if(this.field[i][j] === -1){
                  this.place(this.blocks, j+1, i+1, 'stone');
              }
          }
       }
 
-
-      /*let array = [];
-      for (let i = 0; i < config2.MAP_SIZE_X; ++i) {
-          array[i] = [];
-          for (let j = 0; j < config2.MAP_SIZE_Y; ++j) {
-              array[i][j] = 0;
-          }
-      }
-      for(let i = 0; i < 10; i ++){
-          for(let j = 5; j < 10; j ++){
-              array[i][j] = -1;
-          }
-      }
-
-      for(let i = 1; i < 10; i++){
-          array[12][i] = - 1;
-      }*/
-
-
       let start = new Point(7, 0);
       let end  = new Point(0, 15);
 
-
-      //hardcoded array for the moves of the hero
-      var moves = this.findRoute(field, start, end);
+      var moves = this.findRoute(this.field, start, end);
       this.arr = [];
       var counter = 0;
       console.log(moves.length);
@@ -98,27 +104,13 @@ class Maze extends Phaser.Scene{
       for(var i = l; i>=0; i--){
         this.arr[counter] = moves[i];
         this.arr[counter].setX(7-this.arr[counter].getX());
-        //console.log(this.arr[counter]);
         counter++;
       }
-      //console.log(this.arr);
       for(var i =1; i<this.arr.length; i++){
         console.log(this.arr[i].getX() + "; " + this.arr[i].getY());
       }
-      /*this.arr[0] = {x: 1, y:0};
-      this.arr[1] = {x: 1, y:1};
-      this.arr[2] = {x: 2, y:1};
-      this.arr[3] = {x: 3, y:1};
-      this.arr[4] = {x: 3, y:0};
-      this.arr[5] = {x: 3, y:1};
-      this.arr[6] = {x: 2, y:1};
-      this.arr[7] = {x: 1, y:0};
-      this.arr[8] = {x: 0, y:0};*/
-      //counter for the array (this.arr[])
+
       this.i = 1;
-
-      //this.f = false;
-
     }
 
     moveHeroX(hero, x){
@@ -148,10 +140,10 @@ class Maze extends Phaser.Scene{
       if(this.hero.x == x && this.hero.y == y){
         if(this.i < this.arr.length){
           x = 32 + 64*this.arr[this.i].y;
-          console.log(x);
+          //console.log(x);
           y = 480 - 64*this.arr[this.i].x;
           this.i++;
-          console.log(y);
+          //console.log(y);
         }
       }
 
