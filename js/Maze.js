@@ -21,7 +21,11 @@ class Maze extends Phaser.Scene{
     }
 
     unactivateTrap(pointer, gameObject){
-      //console.log(gameObject);
+      var positionX = (gameObject.x - 32)/64;
+      var positionY = 7 - (480 - gameObject.y)/64;
+
+      console.log(positionX + "; " + positionY);
+      this.field[positionY][positionX] = 0;
       gameObject.setTexture("rock");
     }
 
@@ -31,14 +35,16 @@ class Maze extends Phaser.Scene{
 
       console.log(positionX + "; " + positionY);
       this.field[positionY][positionX] = -1;
-      
+      this.end.setX(0);
+      this.getNewRoute(this.hero.y, this.hero.x);
+
       if(this.activeTrap != null){
         this.unactivateTrap(pointer, this.activeTrap);
       }
       gameObject.setTexture("rock2");
       this.activeTrap = gameObject;
 
-
+      this.f = true;
 
     }
 
@@ -54,6 +60,10 @@ class Maze extends Phaser.Scene{
       this.traps = this.physics.add.group();
 
       this.activeTrap = null;
+
+      this.f = false;
+
+      this.arr = null;
 
       this.setTrap(this.traps, 2, 3);
       this.setTrap(this.traps, 3, 2);
@@ -92,25 +102,36 @@ class Maze extends Phaser.Scene{
          }
       }
 
-      let start = new Point(7, 0);
-      let end  = new Point(0, 15);
+      console.log(this.hero.x + "; " +this.hero.y);
+      this.end  = new Point(0, 15);
+      console.log(this.end);
 
-      var moves = this.findRoute(this.field, start, end);
-      this.arr = [];
-      var counter = 0;
-      console.log(moves.length);
-      var l = moves.length;
-      l--;
-      for(var i = l; i>=0; i--){
-        this.arr[counter] = moves[i];
-        this.arr[counter].setX(7-this.arr[counter].getX());
-        counter++;
-      }
-      for(var i =1; i<this.arr.length; i++){
-        console.log(this.arr[i].getX() + "; " + this.arr[i].getY());
-      }
+      this.getNewRoute(this.hero.y, this.hero.x);
 
       this.i = 1;
+    }
+
+    getNewRoute(startX, startY){
+      startX = 7 - (480 - startX)/64;
+      startY = (startY - 32)/64;
+      let start = new Point(startX, startY);
+      console.log(this.end);
+      this.end.setX(0);
+      var moves = this.findRoute(this.field, start, this.end);
+
+      if(this.arr == null){
+        this.arr = [];
+        var counter = 0;
+        console.log(moves.length);
+        var l = moves.length;
+        l--;
+        for(var i = l; i>=0; i--){
+          this.arr[counter] = moves[i];
+          this.arr[counter].setX(7-this.arr[counter].getX());
+          counter++;
+        }
+      }
+
     }
 
     moveHeroX(hero, x){
@@ -151,6 +172,11 @@ class Maze extends Phaser.Scene{
         this.moveHeroY(this.hero, y);
       }else{
         this.moveHeroX(this.hero, x);
+      }
+
+      if(this.f == true){
+        console.log("ok");
+        this.f = false;
       }
 
     }
