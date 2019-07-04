@@ -77,23 +77,27 @@ class Maze extends Phaser.Scene{
       //counter for the array (this.arr[])
       this.i = 0;
 
+      //this.f = false;
+
     }
 
     moveHeroX(hero, x){
       if(hero.x == x){
         return;
       }else if(hero.x < x){
+        hero.flipX = false;
         hero.x+=2;
       }else if(hero.x > x){
+        hero.flipX = true;
         hero.x-=2;
       }
     }
 
     moveHeroY(hero, y){
-      if(hero.y == y){
+      if(this.hero.y == y){
         return;
-      }else if(hero.y > y){
-        hero.y -= 2;
+      } else if(hero.y > y){
+        this.hero.y -= 2;
       }else if(hero.y < y){
         hero.y += 2;
       }
@@ -102,7 +106,6 @@ class Maze extends Phaser.Scene{
     update(){
 
       if(this.hero.x == x && this.hero.y == y){
-        console.log("yes");
         if(this.i < this.arr.length){
           x = 32 + 64*this.arr[this.i].x;
           console.log(x);

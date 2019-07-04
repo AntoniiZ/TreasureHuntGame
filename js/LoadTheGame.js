@@ -6,6 +6,7 @@ class LoadTheGame extends Phaser.Scene{
         this.load.image('grass', 'assets/grass01.png');
         this.load.image('start', 'assets/start.png');
         this.load.image('hero', 'assets/player.png');
+        this.load.image('hero_back', 'assets/player_back.png');
         this.load.image('stone', 'assets/stone01.png');
 
         this.load.image('rock', 'assets/_rocks/stone03.png');
