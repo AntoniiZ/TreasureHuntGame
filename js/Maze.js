@@ -21,12 +21,13 @@ class Maze extends Phaser.Scene{
 
     create(){
       this.background = this.add.tileSprite(0, 0, config.width*4, config.height*4, "grass").setScale(0.5);
-
+      this.blocks = this.physics.add.group();
+      this.place(this.blocks, 16, 1, 'treasure');
       this.add.sprite(32, config.height-32, 'start').setScale(0.5);
       this.hero = this.add.sprite(32, config.height-32, 'hero').setScale(0.5);
 
       this.traps = this.physics.add.group();
-      this.blocks = this.physics.add.group();
+
 
       this.setTrap(this.traps, 2, 3);
       this.setTrap(this.traps, 3, 2);
@@ -43,7 +44,7 @@ class Maze extends Phaser.Scene{
       this.setTrap(this.traps, 14, 6);
       this.setTrap(this.traps, 15, 7);
 
-      this.place(this.blocks, 16, 1, 'treasure');
+
 
       var field = [
         [ 0, 0,-1,-1, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0,-1, 0],
@@ -65,32 +66,46 @@ class Maze extends Phaser.Scene{
       }
 
 
-        let array = [];
-        for (let i = 0; i < config2.MAP_SIZE_X; ++i) {
-            array[i] = [];
-            for (let j = 0; j < config2.MAP_SIZE_Y; ++j) {
-                array[i][j] = 0;
-            }
-        }
-        for(let i = 0; i < 10; i ++){
-            for(let j = 5; j < 10; j ++){
-                array[i][j] = -1;
-            }
-        }
+      /*let array = [];
+      for (let i = 0; i < config2.MAP_SIZE_X; ++i) {
+          array[i] = [];
+          for (let j = 0; j < config2.MAP_SIZE_Y; ++j) {
+              array[i][j] = 0;
+          }
+      }
+      for(let i = 0; i < 10; i ++){
+          for(let j = 5; j < 10; j ++){
+              array[i][j] = -1;
+          }
+      }
 
-        for(let i = 1; i < 10; i++){
-            array[12][i] = - 1;
-        }
+      for(let i = 1; i < 10; i++){
+          array[12][i] = - 1;
+      }*/
 
 
-        let start = new Point(7, 14);
-        let end  = new Point(0, 1);
-        console.log(this.findRoute(array, start, end));
+      let start = new Point(7, 0);
+      let end  = new Point(0, 15);
+
 
       //hardcoded array for the moves of the hero
+      var moves = this.findRoute(field, start, end);
       this.arr = [];
-
-      this.arr[0] = {x: 1, y:0};
+      var counter = 0;
+      console.log(moves.length);
+      var l = moves.length;
+      l--;
+      for(var i = l; i>=0; i--){
+        this.arr[counter] = moves[i];
+        this.arr[counter].setX(7-this.arr[counter].getX());
+        //console.log(this.arr[counter]);
+        counter++;
+      }
+      //console.log(this.arr);
+      for(var i =1; i<this.arr.length; i++){
+        console.log(this.arr[i].getX() + "; " + this.arr[i].getY());
+      }
+      /*this.arr[0] = {x: 1, y:0};
       this.arr[1] = {x: 1, y:1};
       this.arr[2] = {x: 2, y:1};
       this.arr[3] = {x: 3, y:1};
@@ -98,9 +113,9 @@ class Maze extends Phaser.Scene{
       this.arr[5] = {x: 3, y:1};
       this.arr[6] = {x: 2, y:1};
       this.arr[7] = {x: 1, y:0};
-      this.arr[8] = {x: 0, y:0};
+      this.arr[8] = {x: 0, y:0};*/
       //counter for the array (this.arr[])
-      this.i = 0;
+      this.i = 1;
 
       //this.f = false;
 
@@ -132,9 +147,9 @@ class Maze extends Phaser.Scene{
 
       if(this.hero.x == x && this.hero.y == y){
         if(this.i < this.arr.length){
-          x = 32 + 64*this.arr[this.i].x;
+          x = 32 + 64*this.arr[this.i].y;
           console.log(x);
-          y = 480 - 64*this.arr[this.i].y;
+          y = 480 - 64*this.arr[this.i].x;
           this.i++;
           console.log(y);
         }
@@ -153,13 +168,13 @@ class Maze extends Phaser.Scene{
     findRoute(array, start, end){
 
         let tries = 0;
-        let numbers = new GameMap(config2.MAP_SIZE_X, config2.MAP_SIZE_Y, array);
+        let numbers = new GameMap(config2.MAP_SIZE_Y, config2.MAP_SIZE_X, array);
 
         numbers.setField(start.getX(), start.getY(), 1);
 
         while (numbers.getFieldValue(end.getX(), end.getY()) === 0) {
-            for (let i = 0; i < config2.MAP_SIZE_X; i++) {
-                for (let j = 0; j < config2.MAP_SIZE_Y; j++) {
+            for (let i = 0; i < config2.MAP_SIZE_Y; i++) {
+                for (let j = 0; j < config2.MAP_SIZE_X; j++) {
                     if(numbers.getFieldValue(i, j) > 0){
                         let valueOfCurrent = numbers.getFieldValue(i, j);
                         let currentPoint = new Point(i, j);
@@ -168,7 +183,7 @@ class Maze extends Phaser.Scene{
                             numbers.setField(i - 1, j, valueOfCurrent + 1);
                             numbers.setPrev(i - 1, j, currentPoint);
                         }
-                        else if(i + 1 < config2.MAP_SIZE_X && numbers.getFieldValue(i + 1, j) === 0){
+                        else if(i + 1 < config2.MAP_SIZE_Y && numbers.getFieldValue(i + 1, j) === 0){
                             numbers.setField(i + 1, j, valueOfCurrent + 1);
                             numbers.setPrev(i + 1, j, currentPoint);
                         }
@@ -176,7 +191,7 @@ class Maze extends Phaser.Scene{
                             numbers.setField(i, j - 1, valueOfCurrent + 1);
                             numbers.setPrev(i, j - 1, currentPoint);
                         }
-                        else if(j + 1 < config2.MAP_SIZE_Y && numbers.getFieldValue(i, j + 1) === 0){
+                        else if(j + 1 < config2.MAP_SIZE_X && numbers.getFieldValue(i, j + 1) === 0){
                             numbers.setField(i, j + 1, valueOfCurrent + 1);
                             numbers.setPrev(i, j + 1, currentPoint);
                         }
@@ -218,9 +233,5 @@ class Maze extends Phaser.Scene{
     }
     return path;
   }
-
-
-
-
 
 }
