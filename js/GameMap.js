@@ -14,7 +14,7 @@ class GameMap {
             array[i] = [];
             for (let j = 0; j < m; ++j) {
                 array[i][j] = new Field(arr[i][j]);
-                console.log(array[i][j]);
+                //console.log(array[i][j]);
             }
         }
         return array;

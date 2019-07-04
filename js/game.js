@@ -13,5 +13,7 @@ var config = {
 
 var x = 32;
 var y = 480;
+var score = 0;
+var results=0;
 
 var game = new Phaser.Game(config);

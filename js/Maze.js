@@ -113,6 +113,7 @@ class Maze extends Phaser.Scene{
 
     getNewRoute(startX, startY){
       this.arr = null;
+      console.log(this.field);
       startX = 7 - (480 - startX)/64;
       startY = (startY - 32)/64;
       startX = Math.round(startX);
@@ -135,6 +136,7 @@ class Maze extends Phaser.Scene{
           counter++;
         }
       }
+      console.log(this.arr);
 
     }
 
@@ -183,6 +185,21 @@ class Maze extends Phaser.Scene{
         this.i = 0;
         this.f = false;
       }
+
+      if(this.hero.x == 992 && this.hero.y == 32){
+        this.scene.remove("maze");
+
+        sessionStorage.setItem(results, score);
+        
+        results++;
+
+        this.scene.start("end");
+        
+      }
+      else{
+        score++;
+      }
+      console.log("asdf");
 
     }
 
