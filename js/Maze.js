@@ -35,15 +35,15 @@ class Maze extends Phaser.Scene{
 
       console.log(positionX + "; " + positionY);
       this.field[positionY][positionX] = -1;
-      this.end.setX(0);
-      this.getNewRoute(this.hero.y, this.hero.x);
 
       if(this.activeTrap != null){
         this.unactivateTrap(pointer, this.activeTrap);
       }
+
       gameObject.setTexture("rock2");
       this.activeTrap = gameObject;
-
+      this.end.setX(0);
+      this.getNewRoute(this.hero.y, this.hero.x);
       this.f = true;
 
     }
@@ -79,6 +79,7 @@ class Maze extends Phaser.Scene{
       this.setTrap(this.traps, 13, 3);
       this.setTrap(this.traps, 14, 6);
       this.setTrap(this.traps, 15, 7);
+      this.setTrap(this.traps, 12, 1);
 
 
       this.input.on('gameobjectdown', this.activateTrap, this);
@@ -145,10 +146,10 @@ class Maze extends Phaser.Scene{
         return;
       }else if(hero.x < x){
         hero.flipX = false;
-        hero.x+=2;
+        hero.x+=4;
       }else if(hero.x > x){
         hero.flipX = true;
-        hero.x-=2;
+        hero.x-=4;
       }
     }
 
@@ -156,9 +157,9 @@ class Maze extends Phaser.Scene{
       if(this.hero.y == y){
         return;
       } else if(hero.y > y){
-        this.hero.y -= 2;
+        this.hero.y -= 4;
       }else if(hero.y < y){
-        hero.y += 2;
+        hero.y += 4;
       }
     }
 
@@ -190,11 +191,11 @@ class Maze extends Phaser.Scene{
         this.scene.remove("maze");
 
         sessionStorage.setItem(results, score);
-        
+
         results++;
 
         this.scene.start("end");
-        
+
       }
       else{
         score++;
