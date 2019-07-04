@@ -112,11 +112,15 @@ class Maze extends Phaser.Scene{
     }
 
     getNewRoute(startX, startY){
+      this.arr = null;
       startX = 7 - (480 - startX)/64;
       startY = (startY - 32)/64;
+      startX = Math.round(startX);
+      startY = Math.round(startY);
+      console.log(startX);
+      console.log(startY);
+
       let start = new Point(startX, startY);
-      console.log(this.end);
-      this.end.setX(0);
       var moves = this.findRoute(this.field, start, this.end);
 
       if(this.arr == null){
@@ -176,6 +180,7 @@ class Maze extends Phaser.Scene{
 
       if(this.f == true){
         console.log("ok");
+        this.i = 0;
         this.f = false;
       }
 
