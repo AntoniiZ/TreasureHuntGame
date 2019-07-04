@@ -1,3 +1,5 @@
+//import {Point} from "./Point";
+
 class Maze extends Phaser.Scene{
     constructor(){
         super("maze");
@@ -62,6 +64,29 @@ class Maze extends Phaser.Scene{
          }
       }
 
+
+        let array = [];
+        for (let i = 0; i < config2.MAP_SIZE_X; ++i) {
+            array[i] = [];
+            for (let j = 0; j < config2.MAP_SIZE_Y; ++j) {
+                array[i][j] = 0;
+            }
+        }
+        for(let i = 0; i < 10; i ++){
+            for(let j = 5; j < 10; j ++){
+                array[i][j] = -1;
+            }
+        }
+
+        for(let i = 1; i < 10; i++){
+            array[12][i] = - 1;
+        }
+
+
+        let start = new Point(7, 14);
+        let end  = new Point(0, 1);
+        console.log(this.findRoute(array, start, end));
+
       //hardcoded array for the moves of the hero
       this.arr = [];
 
@@ -122,4 +147,80 @@ class Maze extends Phaser.Scene{
       }
 
     }
+
+
+
+    findRoute(array, start, end){
+
+        let tries = 0;
+        let numbers = new GameMap(config2.MAP_SIZE_X, config2.MAP_SIZE_Y, array);
+
+        numbers.setField(start.getX(), start.getY(), 1);
+
+        while (numbers.getFieldValue(end.getX(), end.getY()) === 0) {
+            for (let i = 0; i < config2.MAP_SIZE_X; i++) {
+                for (let j = 0; j < config2.MAP_SIZE_Y; j++) {
+                    if(numbers.getFieldValue(i, j) > 0){
+                        let valueOfCurrent = numbers.getFieldValue(i, j);
+                        let currentPoint = new Point(i, j);
+
+                        if(i > 0 && numbers.getFieldValue(i - 1, j) === 0){
+                            numbers.setField(i - 1, j, valueOfCurrent + 1);
+                            numbers.setPrev(i - 1, j, currentPoint);
+                        }
+                        else if(i + 1 < config2.MAP_SIZE_X && numbers.getFieldValue(i + 1, j) === 0){
+                            numbers.setField(i + 1, j, valueOfCurrent + 1);
+                            numbers.setPrev(i + 1, j, currentPoint);
+                        }
+                        else if(j > 0 && numbers.getFieldValue(i, j - 1) === 0){
+                            numbers.setField(i, j - 1, valueOfCurrent + 1);
+                            numbers.setPrev(i, j - 1, currentPoint);
+                        }
+                        else if(j + 1 < config2.MAP_SIZE_Y && numbers.getFieldValue(i, j + 1) === 0){
+                            numbers.setField(i, j + 1, valueOfCurrent + 1);
+                            numbers.setPrev(i, j + 1, currentPoint);
+                        }
+                    }
+                }
+            }
+            tries ++;
+            if(tries > config2.MAP_SIZE_X * config2.MAP_SIZE_Y){
+                throw "No route found!";
+            }
+        }
+
+        console.log(JSON.stringify(numbers.getAllPrevious()));
+        console.log(JSON.stringify(numbers.getValues()));
+        console.log("tries: " + tries);
+
+        return this.getRoute(numbers.getAllPrevious(), start, end);
+    }
+
+
+  getRoute(prevArr, start, end) {
+
+    let path = [];
+
+    let current = end,
+        prev = prevArr[current.getX()][current.getY()];
+
+    while(true){
+
+      path.push(current);
+
+      if(current.getX() === start.getX() && current.getY() === start.getY()){
+        break;
+      }
+
+      current = prev;
+      prev = prevArr[current.getX()][current.getY()];
+
+    }
+    return path;
+  }
+
+
+
+
+
 }
