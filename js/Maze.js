@@ -21,8 +21,8 @@ class Maze extends Phaser.Scene{
     }
 
     unactivateTrap(pointer, gameObject){
-      var positionX = (gameObject.x - 32)/64;
-      var positionY = 7 - (480 - gameObject.y)/64;
+      var positionX = (gameObject.x - 32)/config2.GRID_CELL_SIZE;
+      var positionY = 7 - (480 - gameObject.y)/config2.GRID_CELL_SIZE;
 
       console.log(positionX + "; " + positionY);
       this.field[positionY][positionX] = 0;
@@ -47,8 +47,8 @@ class Maze extends Phaser.Scene{
 
       //console.log(this.i);
       this.i = 0;
-      x = 32 + 64*this.arr[this.i].y;
-      y = 480 - 64*this.arr[this.i].x;
+      x = 32 + config2.GRID_CELL_SIZE*this.arr[this.i].y;
+      y = 480 - config2.GRID_CELL_SIZE*this.arr[this.i].x;
 
       this.f = true;
 
@@ -120,8 +120,8 @@ class Maze extends Phaser.Scene{
     getNewRoute(startX, startY){
       this.arr = null;
       console.log(this.field);
-      startX = 7 - (480 - startX)/64;
-      startY = (startY - 32)/64;
+      startX = 7 - (480 - startX)/config2.GRID_CELL_SIZE;
+      startY = (startY - 32)/config2.GRID_CELL_SIZE;
       startX = Math.round(startX);
       startY = Math.round(startY);
       console.log(startX);
@@ -173,8 +173,8 @@ class Maze extends Phaser.Scene{
       if(this.hero.x == x && this.hero.y == y){
         if(this.i < this.arr.length){
 
-          x = 32 + 64*this.arr[this.i].y;
-          y = 480 - 64*this.arr[this.i].x;
+          x = 32 + config2.GRID_CELL_SIZE*this.arr[this.i].y;
+          y = 480 - config2.GRID_CELL_SIZE*this.arr[this.i].x;
           this.i++;
         }
       }
@@ -183,6 +183,11 @@ class Maze extends Phaser.Scene{
         this.moveHeroY(y);
       } else {
         this.moveHeroX(x);
+      }
+
+      if(this.f == true){
+        this.f = false;
+        this.i =1;
       }
 
       if(this.hero.x == 992 && this.hero.y == 32){
