@@ -1,7 +1,7 @@
 import {GameMap} from "../GameMap.js";
 import {Trap} from "../Trap.js";
 import {Point} from "../Point.js";
-import {Hero} from "../api/Hero.js";
+//import {Hero} from "../api/Hero.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
 
