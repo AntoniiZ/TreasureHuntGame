@@ -26,7 +26,7 @@ class End extends Phaser.Scene{
             if(scores[i]){
                 //this.add.text(450, 250 + i*20, "" + (i+1) + ".Score: " + scores[i]);
             }
-            
+
         }
 
         var playAgain = this.add.image(512, 400, 'playAgain');
@@ -35,9 +35,6 @@ class End extends Phaser.Scene{
     }
 
     StartGame(){
-        //this.scene.add("maze", Maze, true);
-      location.reload();
-      //const play = this.scene.get("maze");
-      //play.scene.restart();
+      this.scene.start("loadTheGame");
     }
 }

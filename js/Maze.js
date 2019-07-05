@@ -55,13 +55,12 @@ class Maze extends Phaser.Scene{
     }
 
 
-
     create(){
       this.background = this.add.tileSprite(0, 0, config.width*4, config.height*4, "grass").setScale(0.5);
       this.blocks = this.physics.add.group();
       this.place(this.blocks, 16, 1, 'treasure');
-      this.add.sprite(32, config.height-32, 'start').setScale(0.5);
-      this.hero = this.add.sprite(32, config.height-32, 'hero').setScale(0.5);
+      this.treasure = this.physics.add.sprite(32, config.height-32, 'start').setScale(0.5);
+      this.hero = this.physics.add.sprite(32, config.height-32, 'hero').setScale(0.5);
 
       this.traps = this.physics.add.group();
 
@@ -177,7 +176,6 @@ class Maze extends Phaser.Scene{
           x = 32 + 64*this.arr[this.i].y;
           y = 480 - 64*this.arr[this.i].x;
           this.i++;
-          //console.log(x+"; "+y);
         }
       }
 
@@ -185,12 +183,6 @@ class Maze extends Phaser.Scene{
         this.moveHeroY(y);
       } else {
         this.moveHeroX(x);
-      }
-
-
-      if(this.f == true){
-        this.i = 1;
-        this.f = false;
       }
 
       if(this.hero.x == 992 && this.hero.y == 32){
@@ -208,8 +200,6 @@ class Maze extends Phaser.Scene{
       }
 
     }
-
-
 
     findRoute(array, start, end){
 
