@@ -1,6 +1,6 @@
-//import {Field} from "./Field.js";
+import {Field} from "./Field.js";
 
-class GameMap {
+export class GameMap {
 
     constructor(sizeX, sizeY, array){
         this.sizeX = sizeX;

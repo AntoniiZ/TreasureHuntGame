@@ -1,4 +1,6 @@
-class End extends Phaser.Scene{
+import {score} from "./Maze.js";
+
+export class End extends Phaser.Scene{
     constructor(){
         super("end");
     }
@@ -18,7 +20,7 @@ class End extends Phaser.Scene{
     create(){
         var scores = this.SortSessionStorage();
         this.add.text(450, 200, "Score: " + score);
-        score=0;
+        //score = 0;
 
         for(var i=0; i<4;i++){
             if(scores[i]){

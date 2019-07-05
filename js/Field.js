@@ -1,4 +1,4 @@
-class Field {
+export class Field {
 
     constructor(value){
         this.value = value;

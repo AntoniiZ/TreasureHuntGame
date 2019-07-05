@@ -1,4 +1,10 @@
-var config = {
+import {Load} from "./scenes/Load.js";
+import {Start} from "./scenes/Start.js";
+import {End} from "./scenes/End.js";
+import {LoadTheGame} from "./scenes/LoadTheGame.js";
+import {Maze} from "./scenes/Maze.js";
+
+export var config = {
     type: Phaser.AUTO,
     width: 1024,
     height: 512,
@@ -11,9 +17,5 @@ var config = {
     scene: [Load, Start, LoadTheGame, Maze, End]
 };
 
-var x = 32;
-var y = 480;
-var score = 0;
-var results=0;
 
 var game = new Phaser.Game(config);
