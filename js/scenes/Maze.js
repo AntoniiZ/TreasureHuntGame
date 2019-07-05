@@ -1,8 +1,8 @@
 import {GameMap} from "../GameMap.js";
 import {Trap} from "../Trap.js";
 import {Point} from "../Point.js";
-import {config2} from "../config.js";
-import {config} from "../game.js";
+import {config2} from "../config/config.js";
+import {config} from "../config/game.js";
 
 var x = 32;
 var y = 480;
