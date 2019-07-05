@@ -1,11 +1,12 @@
 import {GameMap} from "../GameMap.js";
 import {Trap} from "../Trap.js";
 import {Point} from "../Point.js";
+import {Hero} from "../api/Hero.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
 
-var x = 32;
-var y = 480;
+export var x = 32;
+export var y = 480;
 export var score = 0;
 var results = 0;
 
@@ -41,28 +42,22 @@ export class Maze extends Phaser.Scene {
     }
 
     activateTrap(pointer, gameObject) {
-        var positionX = (gameObject.x - 32) / 64;
-        var positionY = 7 - (480 - gameObject.y) / 64;
+        if(this.activeTrap != gameObject){
+          var positionX = (gameObject.x - 32) / 64;
+          var positionY = 7 - (480 - gameObject.y) / 64;
 
-        console.log(positionX + "; " + positionY);
-        this.field[positionY][positionX] = -1;
+          console.log(positionX + "; " + positionY);
+          this.field[positionY][positionX] = -1;
 
-        if (this.activeTrap != null) {
-            this.unactivateTrap(pointer, this.activeTrap);
+          if (this.activeTrap != null) {
+              this.unactivateTrap(pointer, this.activeTrap);
+          }
+
+          gameObject.setTexture("rock2");
+          this.activeTrap = gameObject;
+          this.end.setX(0);
+          this.getNewRoute(this.hero.y, this.hero.x);
         }
-
-        gameObject.setTexture("rock2");
-        this.activeTrap = gameObject;
-        this.end.setX(0);
-        this.getNewRoute(this.hero.y, this.hero.x);
-
-        //console.log(this.i);
-        this.i = 0;
-        x = 32 + config2.GRID_CELL_SIZE * this.arr[this.i].y;
-        y = 480 - config2.GRID_CELL_SIZE * this.arr[this.i].x;
-
-        this.f = true;
-
     }
 
 
@@ -122,9 +117,11 @@ export class Maze extends Phaser.Scene {
 
         console.log(this.hero.x + "; " + this.hero.y);
         this.end = new Point(0, 15);
-        console.log(this.end);
+        //console.log(this.end);
 
         this.getNewRoute(this.hero.y, this.hero.x);
+
+        //this.Hero = new Hero(this.field, this.hero);
 
         this.i = 1;
     }
@@ -142,20 +139,23 @@ export class Maze extends Phaser.Scene {
         let start = new Point(startX, startY);
         var moves = this.findRoute(this.field, start, this.end);
 
-        if (this.arr == null) {
-            this.arr = [];
-            var counter = 0;
-            console.log(moves.length);
-            var l = moves.length;
-            l--;
-            for (var i = l; i >= 0; i--) {
-                this.arr[counter] = moves[i];
-                this.arr[counter].setX(7 - this.arr[counter].getX());
-                counter++;
-            }
+        this.arr = [];
+        var counter = 0;
+        console.log(moves.length);
+        var l = moves.length;
+        l--;
+        for (var i = l; i >= 0; i--) {
+          this.arr[counter] = moves[i];
+          this.arr[counter].setX(7 - this.arr[counter].getX());
+          counter++;
         }
-        console.log(this.arr);
 
+        this.i = 0;
+        x = 32 + config2.GRID_CELL_SIZE * this.arr[this.i].y;
+        y = 480 - config2.GRID_CELL_SIZE * this.arr[this.i].x;
+
+        this.f = true;
+        console.log(this.arr);
     }
 
     moveHeroX(x) {
@@ -181,7 +181,6 @@ export class Maze extends Phaser.Scene {
     }
 
     update() {
-
         if (this.hero.x == x && this.hero.y == y) {
             if (this.i < this.arr.length) {
 
