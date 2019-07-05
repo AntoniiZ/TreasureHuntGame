@@ -208,12 +208,11 @@ class Maze extends Phaser.Scene{
 
     findRoute(array, start, end){
 
-        let tries = 0;
         let numbers = new GameMap(config2.MAP_SIZE_Y, config2.MAP_SIZE_X, array);
-
         numbers.setField(start.getX(), start.getY(), 1);
 
         while (numbers.getFieldValue(end.getX(), end.getY()) === 0) {
+            let exploredMore = false;
             for (let i = 0; i < config2.MAP_SIZE_Y; i++) {
                 for (let j = 0; j < config2.MAP_SIZE_X; j++) {
                     if(numbers.getFieldValue(i, j) > 0){
@@ -223,32 +222,31 @@ class Maze extends Phaser.Scene{
                         if(i > 0 && numbers.getFieldValue(i - 1, j) === 0){
                             numbers.setField(i - 1, j, valueOfCurrent + 1);
                             numbers.setPrev(i - 1, j, currentPoint);
+                            exploredMore = true;
                         }
                         if(j + 1 < config2.MAP_SIZE_X && numbers.getFieldValue(i, j + 1) === 0){
                             numbers.setField(i, j + 1, valueOfCurrent + 1);
                             numbers.setPrev(i, j + 1, currentPoint);
+                            exploredMore = true;
                         }
                         if(j > 0 && numbers.getFieldValue(i, j - 1) === 0){
                             numbers.setField(i, j - 1, valueOfCurrent + 1);
                             numbers.setPrev(i, j - 1, currentPoint);
+                            exploredMore = true;
                         }
                         if(i + 1 < config2.MAP_SIZE_Y && numbers.getFieldValue(i + 1, j) === 0){
                             numbers.setField(i + 1, j, valueOfCurrent + 1);
                             numbers.setPrev(i + 1, j, currentPoint);
+                            exploredMore = true;
                         }
 
                     }
                 }
             }
-            tries ++;
-            if(tries > config2.MAP_SIZE_X * config2.MAP_SIZE_Y){
+            if(! exploredMore){
                 throw "No route found!";
             }
         }
-
-        console.log(JSON.stringify(numbers.getAllPrevious()));
-        console.log(JSON.stringify(numbers.getValues()));
-        console.log("tries: " + tries);
 
         return this.getRoute(numbers.getAllPrevious(), start, end);
     }
