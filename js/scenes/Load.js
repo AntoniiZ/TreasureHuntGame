@@ -3,7 +3,8 @@ export class Load extends Phaser.Scene{
         super("load");
     }
     preload(){
-        this.load.image('play', 'assets/play_btn.png');
+        this.load.image('btn1', 'assets/btn1.png');
+        this.load.image('btn2', 'assets/btn2.png');
         this.load.image('background', 'assets/background.png');
 
     }
