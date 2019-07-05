@@ -16,9 +16,7 @@ class End extends Phaser.Scene{
         return sortedArray;
      }
     create(){
-        console.log(Object.values(sessionStorage));
         var scores = this.SortSessionStorage();
-        console.log(scores);
         this.add.text(450, 200, "Score: " + score);
         score=0;
 
