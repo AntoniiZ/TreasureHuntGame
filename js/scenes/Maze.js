@@ -24,12 +24,19 @@ export class Maze extends Phaser.Scene {
         group.add(block);
     }
 
-    setTrap(group, x, y) {
+    setTrap(x, y) {
         var positionX = (x * 32) + 32 * (x - 1);
         var positionY = (y * 32) + 32 * (y - 1);
         var rock = this.add.sprite(positionX, positionY, 'rock').setScale(0.5);
         var trap = new Trap(positionX, positionY, rock)
         trap.get().setInteractive();
+    }
+
+    wait(ms){
+        var d = new Date();
+        var d2 = null;
+        do { d2 = new Date(); }
+        while(d2-d < ms);
     }
 
     unactivateTrap(pointer, gameObject) {
@@ -38,7 +45,9 @@ export class Maze extends Phaser.Scene {
 
         console.log(positionX + "; " + positionY);
         this.field[positionY][positionX] = 0;
-        gameObject.setTexture("rock");
+        gameObject.destroy(true);
+        let t = this;
+        setTimeout(function(){ t.setTrap(positionX+1, positionY+1); }, 2000);
     }
 
     activateTrap(pointer, gameObject) {
@@ -77,21 +86,21 @@ export class Maze extends Phaser.Scene {
 
         this.arr = null;
 
-        this.setTrap(this.traps, 2, 3);
-        this.setTrap(this.traps, 3, 2);
-        this.setTrap(this.traps, 3, 5);
-        this.setTrap(this.traps, 3, 7);
-        this.setTrap(this.traps, 5, 6);
-        this.setTrap(this.traps, 7, 3);
-        this.setTrap(this.traps, 7, 7);
-        this.setTrap(this.traps, 8, 1);
-        this.setTrap(this.traps, 10, 6);
-        this.setTrap(this.traps, 10, 8);
-        this.setTrap(this.traps, 11, 3);
-        this.setTrap(this.traps, 13, 3);
-        this.setTrap(this.traps, 14, 6);
-        this.setTrap(this.traps, 15, 7);
-        this.setTrap(this.traps, 12, 1);
+        this.setTrap(2, 3);
+        this.setTrap(3, 2);
+        this.setTrap(3, 5);
+        this.setTrap(3, 7);
+        this.setTrap(5, 6);
+        this.setTrap(7, 3);
+        this.setTrap(7, 7);
+        this.setTrap(8, 1);
+        this.setTrap(10, 6);
+        this.setTrap(10, 8);
+        this.setTrap(11, 3);
+        this.setTrap(13, 3);
+        this.setTrap(14, 6);
+        this.setTrap(15, 7);
+        this.setTrap(12, 1);
 
 
         this.input.on('gameobjectdown', this.activateTrap, this);
