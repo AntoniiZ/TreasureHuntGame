@@ -4,11 +4,12 @@ export class AStarMap {
 
     constructor(map) {
         this.map = map;
+        console.log(this.map);
     }
 
     outOfBounds(x, y) {
-        return x < 0 || x >= this.map[0].length ||
-            y < 0 || y >= this.map.length;
+        return x < 0 || x >= this.map.length ||
+            y < 0 || y >= this.map[0].length;
     }
 
     blocked(x, y) {
@@ -16,7 +17,7 @@ export class AStarMap {
             return true;
         }
 
-        if (this.map[y][x] === 0) {
+        if (this.map[x][y] === 0 || this.map[x][y] === 3) {
             return false;
         }
         return true;
@@ -24,7 +25,7 @@ export class AStarMap {
 
     getNeighbors(x, y) {
         let neighbors = [];
-
+        //console.log(x);
         // Check left, right, top, bottom
         if (!this.blocked(x + 1, y)) neighbors.push(new Point(x + 1, y));
         if (!this.blocked(x - 1, y)) neighbors.push(new Point(x - 1, y));
@@ -35,6 +36,6 @@ export class AStarMap {
     }
 
     getCost(xC, yC, xT, yT) {
-        return this.map[yT][xT];
+        return this.map[xT][yT];
     }
 }

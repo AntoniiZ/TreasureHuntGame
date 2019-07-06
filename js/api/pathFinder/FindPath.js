@@ -67,7 +67,7 @@ export class FindPath {
 
         while (this.open.length !== 0) {
             current = this.getBestOpen();
-
+            //console.log(current);
             // Check if goal has been discovered to build a path
             if (current.x === xT && current.y === yT) {
                 return this.buildPath(current, []);
@@ -81,6 +81,8 @@ export class FindPath {
             neighbors = this.map.getNeighbors(current.x, current.y);
             for (let i = 0; i < neighbors.length; i++) {
                 // Get current step and distance from current to neighbor
+                //console.log(neighbors[i].y);
+
                 stepCost = current.g + this.map.getCost(current.x, current.y, neighbors[i].x, neighbors[i].y);
 
                 // Check for the neighbor in the closed set

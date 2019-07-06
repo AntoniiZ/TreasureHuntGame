@@ -1,7 +1,7 @@
 import {GameMap} from "../GameMap.js";
 import {Trap} from "../Trap.js";
 import {Point} from "../Point.js";
-//import {Hero} from "../api/Hero.js";
+import {FindPath} from "../api/pathFinder/FindPath.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
 
@@ -32,13 +32,6 @@ export class Maze extends Phaser.Scene {
         trap.get().setInteractive();
     }
 
-    wait(ms){
-        var d = new Date();
-        var d2 = null;
-        do { d2 = new Date(); }
-        while(d2-d < ms);
-    }
-
     unactivateTrap(pointer, gameObject) {
         var positionX = (gameObject.x - 32) / config2.GRID_CELL_SIZE;
         var positionY = 7 - (480 - gameObject.y) / config2.GRID_CELL_SIZE;
@@ -64,11 +57,9 @@ export class Maze extends Phaser.Scene {
 
           gameObject.setTexture("rock2");
           this.activeTrap = gameObject;
-          this.end.setX(0);
           this.getNewRoute(this.hero.y, this.hero.x);
         }
     }
-
 
     create() {
         score = 0;
@@ -78,12 +69,8 @@ export class Maze extends Phaser.Scene {
         this.treasure = this.physics.add.sprite(32, config.height - 32, 'start').setScale(0.5);
         this.hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
 
-        this.traps = this.physics.add.group();
-
         this.activeTrap = null;
-
         this.f = false;
-
         this.arr = null;
 
         this.setTrap(2, 3);
@@ -102,7 +89,6 @@ export class Maze extends Phaser.Scene {
         this.setTrap(15, 7);
         this.setTrap(12, 1);
 
-
         this.input.on('gameobjectdown', this.activateTrap, this);
 
         this.field = [
@@ -113,9 +99,8 @@ export class Maze extends Phaser.Scene {
             [0, 0, 0, 0, -1, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0],
             [0, -1, -1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, -1],
             [0, 0, 0, 0, -1, 0, 0, 0, -1, -1, 0, -1, 0, -1, 0, -1],
-            [0, 0, -1, 0, -1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, -1]
+            [3, 0, -1, 0, -1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, -1]
         ];
-
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 16; j++) {
                 if (this.field[i][j] === -1) {
@@ -124,14 +109,8 @@ export class Maze extends Phaser.Scene {
             }
         }
 
-        console.log(this.hero.x + "; " + this.hero.y);
-        this.end = new Point(0, 15);
-        //console.log(this.end);
-
+        this.path = new FindPath(this.field);
         this.getNewRoute(this.hero.y, this.hero.x);
-
-        //this.Hero = new Hero(this.field, this.hero);
-
         this.i = 1;
     }
 
@@ -144,25 +123,19 @@ export class Maze extends Phaser.Scene {
         startY = Math.round(startY);
         console.log(startX);
         console.log(startY);
-
-        let start = new Point(startX, startY);
-        var moves = this.findRoute(this.field, start, this.end);
-
-        this.arr = [];
-        var counter = 0;
-        console.log(moves.length);
+        var moves = this.path.findPath(startX, startY, 0, 15);
         var l = moves.length;
         l--;
+        this.arr = [];
+        var counter = 0;
         for (var i = l; i >= 0; i--) {
           this.arr[counter] = moves[i];
-          this.arr[counter].setX(7 - this.arr[counter].getX());
+          this.arr[counter].setX(this.arr[counter].getX());
           counter++;
         }
-
         this.i = 0;
         x = 32 + config2.GRID_CELL_SIZE * this.arr[this.i].y;
-        y = 480 - config2.GRID_CELL_SIZE * this.arr[this.i].x;
-
+        y = 480 - config2.GRID_CELL_SIZE * (7-this.arr[this.i].x);
         this.f = true;
         console.log(this.arr);
     }
@@ -170,127 +143,48 @@ export class Maze extends Phaser.Scene {
     moveHeroX(x) {
         if (this.hero.x == x) {
             return;
-        } else if (this.hero.x < x) {
-            this.hero.flipX = false;
-            this.hero.x += 4;
         } else if (this.hero.x > x) {
             this.hero.flipX = true;
             this.hero.x -= 4;
+        } else if (this.hero.x < x) {
+            this.hero.flipX = false;
+            this.hero.x += 4;
         }
     }
 
     moveHeroY(y) {
         if (this.hero.y == y) {
             return;
-        } else if (this.hero.y > y) {
-            this.hero.y -= 4;
         } else if (this.hero.y < y) {
             this.hero.y += 4;
+        } else if (this.hero.y > y) {
+            this.hero.y -= 4;
         }
     }
 
     update() {
         if (this.hero.x == x && this.hero.y == y) {
             if (this.i < this.arr.length) {
-
                 x = 32 + config2.GRID_CELL_SIZE * this.arr[this.i].y;
-                y = 480 - config2.GRID_CELL_SIZE * this.arr[this.i].x;
+                y = 480 - config2.GRID_CELL_SIZE * (7-this.arr[this.i].x);
+                //console.log(x + "; " + y);
                 this.i++;
             }
         }
-
         if (this.hero.x == x) {
             this.moveHeroY(y);
         } else {
             this.moveHeroX(x);
         }
 
-        if (this.f == true) {
-            this.f = false;
-            this.i = 1;
-        }
-
         if (this.hero.x == 992 && this.hero.y == 32) {
-
             sessionStorage.setItem(results, score);
-
             results++;
             x = 32;
             y = 480;
             this.scene.start("end");
-
         } else {
             score++;
         }
-
     }
-
-    findRoute(array, start, end) {
-
-        let numbers = new GameMap(config2.MAP_SIZE_Y, config2.MAP_SIZE_X, array);
-        numbers.setField(start.getX(), start.getY(), 1);
-
-        while (numbers.getFieldValue(end.getX(), end.getY()) === 0) {
-            let exploredMore = false;
-            for (let i = 0; i < config2.MAP_SIZE_Y; i++) {
-                for (let j = 0; j < config2.MAP_SIZE_X; j++) {
-                    if (numbers.getFieldValue(i, j) > 0) {
-                        let valueOfCurrent = numbers.getFieldValue(i, j);
-                        let currentPoint = new Point(i, j);
-
-                        if (i > 0 && numbers.getFieldValue(i - 1, j) === 0) {
-                            numbers.setField(i - 1, j, valueOfCurrent + 1);
-                            numbers.setPrev(i - 1, j, currentPoint);
-                            exploredMore = true;
-                        }
-                        if (j + 1 < config2.MAP_SIZE_X && numbers.getFieldValue(i, j + 1) === 0) {
-                            numbers.setField(i, j + 1, valueOfCurrent + 1);
-                            numbers.setPrev(i, j + 1, currentPoint);
-                            exploredMore = true;
-                        }
-                        if (j > 0 && numbers.getFieldValue(i, j - 1) === 0) {
-                            numbers.setField(i, j - 1, valueOfCurrent + 1);
-                            numbers.setPrev(i, j - 1, currentPoint);
-                            exploredMore = true;
-                        }
-                        if (i + 1 < config2.MAP_SIZE_Y && numbers.getFieldValue(i + 1, j) === 0) {
-                            numbers.setField(i + 1, j, valueOfCurrent + 1);
-                            numbers.setPrev(i + 1, j, currentPoint);
-                            exploredMore = true;
-                        }
-
-                    }
-                }
-            }
-            if (!exploredMore) {
-                throw "No route found!";
-            }
-        }
-
-        return this.getRoute(numbers.getAllPrevious(), start, end);
-    }
-
-
-    getRoute(prevArr, start, end) {
-
-        let path = [];
-
-        let current = end,
-            prev = prevArr[current.getX()][current.getY()];
-
-        while (true) {
-
-            path.push(current);
-
-            if (current.getX() === start.getX() && current.getY() === start.getY()) {
-                break;
-            }
-
-            current = prev;
-            prev = prevArr[current.getX()][current.getY()];
-
-        }
-        return path;
-    }
-
 }
