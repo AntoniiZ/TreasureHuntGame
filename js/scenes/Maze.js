@@ -2,6 +2,7 @@ import {GameMap} from "../GameMap.js";
 import {Trap} from "../Trap.js";
 import {Point} from "../Point.js";
 import {FindPath} from "../api/pathFinder/FindPath.js";
+import {Hero} from "../api/Hero.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
 
@@ -17,11 +18,10 @@ export class Maze extends Phaser.Scene {
 
     }
 
-    place(group, x, y, name) {
+    place(x, y, name) {
         var positionX = (32 * x) + 32 * (x - 1);
         var positionY = (32 * y) + 32 * (y - 1);
         var block = this.add.sprite(positionX, positionY, name).setScale(0.5);
-        group.add(block);
     }
 
     setTrap(x, y) {
@@ -57,16 +57,15 @@ export class Maze extends Phaser.Scene {
 
           gameObject.setTexture("rock2");
           this.activeTrap = gameObject;
-          this.getNewRoute(this.hero.y, this.hero.x);
+          this.getNewRoute(this.hero.getY(), this.hero.getX());
         }
     }
 
     create() {
         score = 0;
         this.background = this.add.tileSprite(0, 0, config.width * 4, config.height * 4, "grass").setScale(0.5);
-        this.blocks = this.physics.add.group();
-        this.place(this.blocks, 16, 1, 'treasure');
-        this.treasure = this.physics.add.sprite(32, config.height - 32, 'start').setScale(0.5);
+        this.place(16, 1, 'treasure');
+        this.place(1, 8, 'start');
         this.activeTrap = null;
         this.arr = null;
 
@@ -85,20 +84,20 @@ export class Maze extends Phaser.Scene {
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 16; j++) {
                 if (this.field[i][j] === -1) {
-                    this.place(this.blocks, j + 1, i + 1, 'stone');
+                    this.place(j + 1, i + 1, 'stone');
                 } else if(this.field[i][j] === -2){
                   this.field[i][j] = 0;
                   console.log(i + "; " +j);
                   this.setTrap(j+1, i+1);
                 } else {
-                    this.place(this.blocks, j + 1, i + 1, 'tiny_grass');
+                    this.place(j + 1, i + 1, 'tiny_grass');
                 }
             }
         }
-        this.hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
-
+        var hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
+        this.hero = new Hero(this.field, hero);
         this.path = new FindPath(this.field);
-        this.getNewRoute(this.hero.y, this.hero.x);
+        this.getNewRoute(this.hero.getY(), this.hero.getX());
         this.i = 1;
     }
 
@@ -127,30 +126,8 @@ export class Maze extends Phaser.Scene {
         console.log(this.arr);
     }
 
-    moveHeroX(x) {
-        if (this.hero.x == x) {
-            return;
-        } else if (this.hero.x > x) {
-            this.hero.flipX = true;
-            this.hero.x -= 4;
-        } else if (this.hero.x < x) {
-            this.hero.flipX = false;
-            this.hero.x += 4;
-        }
-    }
-    
-    moveHeroY(y) {
-        if (this.hero.y == y) {
-            return;
-        } else if (this.hero.y < y) {
-            this.hero.y += 4;
-        } else if (this.hero.y > y) {
-            this.hero.y -= 4;
-        }
-    }
-
     update() {
-        if (this.hero.x == x && this.hero.y == y) {
+        if (this.hero.getX() == x && this.hero.getY() == y) {
             if (this.i < this.arr.length) {
                 x = 32 + config2.GRID_CELL_SIZE * this.arr[this.i].y;
                 y = 480 - config2.GRID_CELL_SIZE * (7-this.arr[this.i].x);
@@ -158,13 +135,13 @@ export class Maze extends Phaser.Scene {
                 this.i++;
             }
         }
-        if (this.hero.x == x) {
-            this.moveHeroY(y);
+        if (this.hero.getX() == x) {
+            this.hero.moveHeroY(y);
         } else {
-            this.moveHeroX(x);
+            this.hero.moveHeroX(x);
         }
 
-        if (this.hero.x == 992 && this.hero.y == 32) {
+        if (this.hero.getX() == 992 && this.hero.getY() == 32) {
             sessionStorage.setItem(results, score);
             results++;
             x = 32;
