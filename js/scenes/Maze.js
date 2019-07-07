@@ -67,47 +67,35 @@ export class Maze extends Phaser.Scene {
         this.blocks = this.physics.add.group();
         this.place(this.blocks, 16, 1, 'treasure');
         this.treasure = this.physics.add.sprite(32, config.height - 32, 'start').setScale(0.5);
-        this.hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
-
         this.activeTrap = null;
-        this.f = false;
         this.arr = null;
-
-        this.setTrap(2, 3);
-        this.setTrap(3, 2);
-        this.setTrap(3, 5);
-        this.setTrap(3, 7);
-        this.setTrap(5, 6);
-        this.setTrap(7, 3);
-        this.setTrap(7, 7);
-        this.setTrap(8, 1);
-        this.setTrap(10, 6);
-        this.setTrap(10, 8);
-        this.setTrap(11, 3);
-        this.setTrap(13, 3);
-        this.setTrap(14, 6);
-        this.setTrap(15, 7);
-        this.setTrap(12, 1);
 
         this.input.on('gameobjectdown', this.activateTrap, this);
 
         this.field = [
-            [0, 0, -1, -1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0],
-            [0, 0, 0, 0, 0, -1, -1, -1, 0, 0, 0, -1, 0, 0, 0, 0],
-            [-1, 0, -1, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, -1, 0, 0],
+            [0, 0, -1, -1, 0, 0, 0, -2, 0, -1, 0, -2, 0, 0, -1, 0],
+            [0, 0, -2, 0, 0, -1, -1, -1, 0, 0, 0, -1, 0, 0, 0, 0],
+            [-1, -2, -1, 0, 0, 0, -2, 0, 0, -1, -2, -1, -2, -1, 0, 0],
             [0, 0, -1, 0, -1, 0, -1, 0, 0, -1, 0, 0, 0, -1, -1, 0],
-            [0, 0, 0, 0, -1, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0],
-            [0, -1, -1, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, -1],
-            [0, 0, 0, 0, -1, 0, 0, 0, -1, -1, 0, -1, 0, -1, 0, -1],
-            [3, 0, -1, 0, -1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, -1]
+            [0, 0, -2, 0, -1, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0],
+            [0, -1, -1, 0, -2, 0, -1, 0, 0, -2, 0, 0, 0, -2, 0, -1],
+            [0, 0, -2, 0, -1, 0, -2, 0, -1, -1, 0, -1, 0, -1, -2, -1],
+            [0, 0, -1, 0, -1, 0, -1, 0, 0, -2, 0, 0, 0, 0, 0, -1]
         ];
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 16; j++) {
                 if (this.field[i][j] === -1) {
                     this.place(this.blocks, j + 1, i + 1, 'stone');
+                } else if(this.field[i][j] === -2){
+                  this.field[i][j] = 0;
+                  console.log(i + "; " +j);
+                  this.setTrap(j+1, i+1);
+                } else {
+                    this.place(this.blocks, j + 1, i + 1, 'tiny_grass');
                 }
             }
         }
+        this.hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
 
         this.path = new FindPath(this.field);
         this.getNewRoute(this.hero.y, this.hero.x);
@@ -136,7 +124,6 @@ export class Maze extends Phaser.Scene {
         this.i = 0;
         x = 32 + config2.GRID_CELL_SIZE * this.arr[this.i].y;
         y = 480 - config2.GRID_CELL_SIZE * (7-this.arr[this.i].x);
-        this.f = true;
         console.log(this.arr);
     }
 
@@ -151,7 +138,7 @@ export class Maze extends Phaser.Scene {
             this.hero.x += 4;
         }
     }
-
+    
     moveHeroY(y) {
         if (this.hero.y == y) {
             return;
