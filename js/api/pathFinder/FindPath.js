@@ -15,7 +15,6 @@ export class FindPath {
         return this;
     }
 
-    // Remove a step that already exists by object memory address (not actual x and y values)
     removeOpen(step) {
         for (let i = 0; i < this.open.length; i++) {
             if (this.open[i] === step) this.open.splice(i, 1);
@@ -56,46 +55,39 @@ export class FindPath {
         return false;
     }
 
-    findPath(xC, yC, xT, yT) {
+    findPath(startX, startY, endX, endY) {
         let current,
             neighbors,
             neighborRecord,
             stepCost;
 
         this.reset()
-            .addOpen(new Step(xC, yC, xT, yT, this.step, false));
+            .addOpen(new Step(startX, startY, endX, endY, this.step, false));
 
         while (this.open.length !== 0) {
             current = this.getBestOpen();
-            //console.log(current);
-            // Check if goal has been discovered to build a path
-            if (current.x === xT && current.y === yT) {
+
+            if (current.x === endX && current.y === endY) {
                 return this.buildPath(current, []);
             }
 
-            // Move current into closed set
             this.removeOpen(current)
                 .addClosed(current);
 
-            // Get neighbors from the map and check them
             neighbors = this.map.getNeighbors(current.x, current.y);
             for (let i = 0; i < neighbors.length; i++) {
-                // Get current step and distance from current to neighbor
-                //console.log(neighbors[i].y);
 
-                stepCost = current.g + this.map.getCost(current.x, current.y, neighbors[i].x, neighbors[i].y);
+                stepCost = current.g + this.map.getCost(neighbors[i].x, neighbors[i].y);
 
-                // Check for the neighbor in the closed set
-                // then see if its cost is >= the stepCost, if so skip current neighbor
                 neighborRecord = this.inClosed(neighbors[i]);
-                if (neighborRecord && stepCost >= neighborRecord.g)
+                if (neighborRecord && stepCost >= neighborRecord.g) {
                     continue;
+                }
 
-                // Verify neighbor doesn't exist or new score for it is better
                 neighborRecord = this.inOpen(neighbors[i]);
                 if (!neighborRecord || stepCost < neighborRecord.g) {
                     if (!neighborRecord) {
-                        this.addOpen(new Step(neighbors[i].x, neighbors[i].y, xT, yT, stepCost, current));
+                        this.addOpen(new Step(neighbors[i].x, neighbors[i].y, endX, endY, stepCost, current));
                     } else {
                         neighborRecord.parent = current;
                         neighborRecord.g = stepCost;
@@ -108,7 +100,6 @@ export class FindPath {
         return false;
     }
 
-    // path buliding method
     buildPath(tile, stack) {
         stack.push(tile);
 

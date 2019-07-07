@@ -25,7 +25,7 @@ export class AStarMap {
 
     getNeighbors(x, y) {
         let neighbors = [];
-        //console.log(x);
+
         // Check left, right, top, bottom
         if (!this.blocked(x + 1, y)) neighbors.push(new Point(x + 1, y));
         if (!this.blocked(x - 1, y)) neighbors.push(new Point(x - 1, y));
@@ -35,7 +35,7 @@ export class AStarMap {
         return neighbors;
     }
 
-    getCost(xC, yC, xT, yT) {
-        return this.map[xT][yT];
+    getCost(x, y) {
+        return this.map[x][y];
     }
 }
