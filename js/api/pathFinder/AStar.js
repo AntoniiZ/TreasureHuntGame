@@ -1,5 +1,6 @@
 import {Step} from "./Step.js";
 import {AStarMap} from "./AStarMap.js";
+import {config2} from "../../config/config.js";
 
 export class AStar {
 
@@ -64,7 +65,15 @@ export class AStar {
         this.reset()
             .addOpen(new Step(startX, startY, endX, endY, this.step, false));
 
+        let i = 0;
+
         while (this.open.length !== 0) {
+
+            i ++;
+            if(i > config2.MAP_SIZE_X * config2.MAP_SIZE_Y){
+                break;
+            }
+
             current = this.getBestOpen();
 
             if (current.x === endX && current.y === endY) {
@@ -97,7 +106,8 @@ export class AStar {
             }
         }
 
-        return false;
+        console.warn("Can't find path!");
+        return [];
     }
 
     buildPath(tile, stack) {
