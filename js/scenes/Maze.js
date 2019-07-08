@@ -1,7 +1,7 @@
 //import {GameMap} from "../GameMap.js";
 import {Trap} from "../api/Trap.js";
 import {Point} from "../api/Point.js";
-import {FindPath} from "../api/pathFinder/FindPath.js";
+import {AStar} from "../api/pathFinder/AStar.js";
 import {Hero} from "../api/Hero.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
@@ -93,11 +93,11 @@ export class Maze extends Phaser.Scene {
         }
         this.place(16, 1, 'treasure');
         this.place(1, 8, 'start');
-        this.path = new FindPath(this.field);
+        this.path = new AStar(this.field);
         var hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
         this.hero = new Hero(this.field, hero, this.path);
         this.i = 1;
-        this.arr = this.hero.getNewRoute(x, y, this.i);
+        this.arr = this.hero.getNewRoute();
 
     }
 
