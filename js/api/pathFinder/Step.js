@@ -1,4 +1,4 @@
-import {Point} from "../../Point.js";
+import {Point} from "../Point.js";
 
 export class Step extends Point {
 
@@ -17,4 +17,3 @@ export class Step extends Point {
         return distanceX + distanceY;
     }
 }
-

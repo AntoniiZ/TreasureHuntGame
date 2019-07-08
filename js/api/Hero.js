@@ -1,8 +1,8 @@
-import {Point} from "../Point.js";
+import {Point} from "../api/Point.js";
 import {MapOptions} from "../config/MapOptions.js";
 import {FindPath} from "./pathFinder/FindPath.js";
 import {EnumConstants} from "./EnumConstants.js";
-import {GameMap} from "../GameMap.js";
+//import {GameMap} from "../GameMap.js";
 import {config2} from "../config/config.js";
 
 export var x = 32;
