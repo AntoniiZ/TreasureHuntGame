@@ -21,11 +21,10 @@ export class Ice extends Trap {
       var t = this;
       console.log(this.state);
       var ms = Math.floor(Math.random() * (+11000 - +1000)) + +1000;
-      console.log(ms); 
+      console.log(ms);
       setTimeout(function(){
         if(t.state > 0){
-          t.ice.destroy(true);
-          t.ice = t.maze.add.sprite(t.ice.x, t.ice.y, 'ice'+t.state).setScale(0.5);
+          t.ice.setTexture('ice'+t.state);
           t.updateState();
         }
       }, ms);
