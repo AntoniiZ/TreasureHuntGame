@@ -1,7 +1,7 @@
 import {Step} from "./Step.js";
 import {AStarMap} from "./AStarMap.js";
 
-export class FindPath {
+export class AStar {
 
     constructor(map) {
         this.map = new AStarMap(map);

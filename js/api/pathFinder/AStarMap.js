@@ -17,10 +17,7 @@ export class AStarMap {
             return true;
         }
 
-        if (this.map[x][y] === 0 || this.map[x][y] === 3) {
-            return false;
-        }
-        return true;
+        return this.map[x][y] < 0;
     }
 
     getNeighbors(x, y) {
