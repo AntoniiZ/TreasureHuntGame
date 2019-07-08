@@ -1,6 +1,5 @@
 import {Step} from "./Step.js";
 import {AStarMap} from "./AStarMap.js";
-import {config2} from "../../config/config.js";
 
 export class AStar {
 
@@ -63,7 +62,7 @@ export class AStar {
             stepCost;
 
         this.reset()
-            .addOpen(new Step(startX, startY, endX, endY, this.step, false));
+            .addOpen(new Step(startX, startY, endX, endY, 0, false));
 
         while (this.open.length !== 0) {
 
