@@ -42,11 +42,10 @@ export class Hero {
       }
     }
 
-    getNewRoute(x, y) {
-        let startX = this.hero.x, startY = this.hero.y;
-        startX = Math.round((startX - 32) / config2.GRID_CELL_SIZE);
-        startY = Math.round(7 - (480 - startY) / config2.GRID_CELL_SIZE);
-        let moves = this.path.findPath(startY, startX, 0, 15);
-        return moves.reverse();
+    getNewRoute(x, y) {;
+        return this.path.findPath(
+            Math.round(7 - (480 - this.hero.y) / config2.GRID_CELL_SIZE),
+            Math.round((this.hero.x - 32) / config2.GRID_CELL_SIZE),
+            0, 15).reverse();
     }
 }
