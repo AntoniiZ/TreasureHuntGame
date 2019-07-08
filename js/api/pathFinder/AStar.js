@@ -62,9 +62,10 @@ export class AStar {
             stepCost;
 
         this.reset()
-            .addOpen(new Step(startX, startY, endX, endY, this.step, false));
+            .addOpen(new Step(startX, startY, endX, endY, 0, false));
 
         while (this.open.length !== 0) {
+
             current = this.getBestOpen();
 
             if (current.x === endX && current.y === endY) {
@@ -97,7 +98,8 @@ export class AStar {
             }
         }
 
-        return false;
+        console.warn("Can't find path!");
+        return [];
     }
 
     buildPath(tile, stack) {
