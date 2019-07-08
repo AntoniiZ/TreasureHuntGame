@@ -13,6 +13,7 @@ export class LoadTheGame extends Phaser.Scene{
         this.load.image('rock', 'assets/_rocks/stone03.png');
         this.load.image('rock2', 'assets/_rocks/stone01.png');
         this.load.image('treasure', 'assets/treasure.png');
+        this.load.image('ice_block', 'assets/ice.png');
 
     }
     create(){
