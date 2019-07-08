@@ -4,6 +4,7 @@ var server = require('http').createServer(app);
 const path = require('path');
 app.use('/js', express.static('js'));
 app.use('/assets', express.static('assets'));
+app.use('/jasmine', express.static('jasmine'));
 
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname+'/index.html'));
