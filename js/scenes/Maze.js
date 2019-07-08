@@ -54,10 +54,10 @@ export class Maze extends Phaser.Scene {
           if (this.activeTrap != null) {
               this.unactivateTrap(pointer, this.activeTrap);
           }
-
           gameObject.setTexture("rock2");
           this.activeTrap = gameObject;
-          this.getNewRoute(this.hero.getY(), this.hero.getX());
+          this.arr = this.hero.getNewRoute(x, y);
+          this.i = 0;
         }
     }
 
@@ -94,36 +94,12 @@ export class Maze extends Phaser.Scene {
                 }
             }
         }
-        var hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
-        this.hero = new Hero(this.field, hero);
         this.path = new FindPath(this.field);
-        this.getNewRoute(this.hero.getY(), this.hero.getX());
+        var hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
+        this.hero = new Hero(this.field, hero, this.path);
         this.i = 1;
-    }
+        this.arr = this.hero.getNewRoute(x, y, this.i);
 
-    getNewRoute(startX, startY) {
-        this.arr = null;
-        console.log(this.field);
-        startX = 7 - (480 - startX) / config2.GRID_CELL_SIZE;
-        startY = (startY - 32) / config2.GRID_CELL_SIZE;
-        startX = Math.round(startX);
-        startY = Math.round(startY);
-        console.log(startX);
-        console.log(startY);
-        var moves = this.path.findPath(startX, startY, 0, 15);
-        var l = moves.length;
-        l--;
-        this.arr = [];
-        var counter = 0;
-        for (var i = l; i >= 0; i--) {
-          this.arr[counter] = moves[i];
-          this.arr[counter].setX(this.arr[counter].getX());
-          counter++;
-        }
-        this.i = 0;
-        x = 32 + config2.GRID_CELL_SIZE * this.arr[this.i].y;
-        y = 480 - config2.GRID_CELL_SIZE * (7-this.arr[this.i].x);
-        console.log(this.arr);
     }
 
     update() {
@@ -131,7 +107,6 @@ export class Maze extends Phaser.Scene {
             if (this.i < this.arr.length) {
                 x = 32 + config2.GRID_CELL_SIZE * this.arr[this.i].y;
                 y = 480 - config2.GRID_CELL_SIZE * (7-this.arr[this.i].x);
-                //console.log(x + "; " + y);
                 this.i++;
             }
         }
