@@ -28,7 +28,7 @@ export class Maze extends Phaser.Scene {
         var positionX = (x * 32) + 32 * (x - 1);
         var positionY = (y * 32) + 32 * (y - 1);
         var rock = this.add.sprite(positionX, positionY, 'rock').setScale(0.5);
-        var trap = new Trap(positionX, positionY, rock)
+        var trap = new Trap(positionX, positionY, rock);
         trap.get().setInteractive();
     }
 
@@ -64,8 +64,6 @@ export class Maze extends Phaser.Scene {
     create() {
         score = 0;
         this.background = this.add.tileSprite(0, 0, config.width * 4, config.height * 4, "grass").setScale(0.5);
-        this.place(16, 1, 'treasure');
-        this.place(1, 8, 'start');
         this.activeTrap = null;
         this.arr = null;
 
@@ -87,13 +85,14 @@ export class Maze extends Phaser.Scene {
                     this.place(j + 1, i + 1, 'stone');
                 } else if(this.field[i][j] === -2){
                   this.field[i][j] = 0;
-                  console.log(i + "; " +j);
                   this.setTrap(j+1, i+1);
                 } else {
-                    this.place(j + 1, i + 1, 'tiny_grass');
+                  this.place(j + 1, i + 1, 'tiny_grass');
                 }
             }
         }
+        this.place(16, 1, 'treasure');
+        this.place(1, 8, 'start');
         this.path = new FindPath(this.field);
         var hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
         this.hero = new Hero(this.field, hero, this.path);
