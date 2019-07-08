@@ -34,15 +34,19 @@ export class Maze extends Phaser.Scene {
         trap.get().setInteractive();
     }
 
-    unactivateTrap(pointer, gameObject) {
+    unactivateTrap(gameObject) {
         var positionX = (gameObject.x - 32) / config2.GRID_CELL_SIZE;
         var positionY = 7 - (480 - gameObject.y) / config2.GRID_CELL_SIZE;
 
         console.log(positionX + "; " + positionY);
         this.field[positionY][positionX] = 0;
-        gameObject.destroy(true);
         let t = this;
-        setTimeout(function(){ t.setTrap(positionX+1, positionY+1); }, 2000);
+        gameObject.visible = false;
+        setTimeout(function(){
+          gameObject.setTexture("rock");
+          gameObject.visible = true;
+          gameObject.input.enable = true;
+        }, 2000);
     }
 
     activateTrap(pointer, gameObject) {
@@ -54,7 +58,7 @@ export class Maze extends Phaser.Scene {
         this.field[positionY][positionX] = -1;
 
         if (this.activeTrap != null) {
-            this.unactivateTrap(pointer, this.activeTrap);
+            this.unactivateTrap(this.activeTrap);
         }
         gameObject.setTexture("rock2");
         this.activeTrap = gameObject;
