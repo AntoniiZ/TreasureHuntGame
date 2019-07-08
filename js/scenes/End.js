@@ -6,16 +6,16 @@ export class End extends Phaser.Scene{
     }
     preload(){
         this.load.image('playAgain', 'assets/playAgainButtonNorm.png');
+        this.load.image('playAgain1', 'assets/playAgainButtonNorm1.png');
     }
     SortSessionStorage(){
         if(sessionStorage.length > 0){
-           var sessionStorageArray = new Array();
+           var sessionStorageArray = [];
            for (var i=0;i<sessionStorage.length;i++){
                 sessionStorageArray[i] = sessionStorage.getItem(sessionStorage.key(i));
            }
         }
-        var sortedArray = sessionStorageArray.sort();
-        return sortedArray;
+        return sessionStorageArray.sort();
      }
     create(){
         var scores = this.SortSessionStorage();
@@ -26,9 +26,18 @@ export class End extends Phaser.Scene{
             }
         }
 
-        var playAgain = this.add.image(512, 400, 'playAgain');
+        var playAgain = this.add.image(512, 400, 'playAgain1');
         playAgain.setInteractive();
+
         this.input.on('gameobjectdown', this.StartGame, this);
+
+        playAgain.on('pointerover', function(pointer){
+            playAgain.setTexture('playAgain');
+        });
+
+        playAgain.on('pointerout',function(pointer){
+            playAgain.setTexture('playAgain1');
+        })﻿﻿;
     }
 
     StartGame(){

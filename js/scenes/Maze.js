@@ -98,7 +98,6 @@ export class Maze extends Phaser.Scene {
         this.hero = new Hero(this.field, hero, this.path);
         this.i = 1;
         this.arr = this.hero.getNewRoute();
-
     }
 
     update() {
