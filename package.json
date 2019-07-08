@@ -18,6 +18,7 @@
   "homepage": "https://github.com/AntoniiZ/TreasureHuntGame#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "node": "^12.6.0",
     "nodemon": "^1.19.1"
   }
 }
