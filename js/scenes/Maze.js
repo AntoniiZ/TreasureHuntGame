@@ -142,10 +142,11 @@ export class Maze extends Phaser.Scene {
         this.meltingTimer++;
 
         if(this.meltingTimer > 100){
-          this.iceBlocks.forEach(ice => {ice.melt(1000)});
+          this.iceBlocks.forEach(ice => {ice.melt()});
           this.meltingTimer = 0;
           this.iceBlocks.forEach(ice => {
             if(ice.getState() == 1){
+              console.log(ice.getState());
               this.field[ice.getY()-1][ice.getX()-1] = 0;
             }
           });
