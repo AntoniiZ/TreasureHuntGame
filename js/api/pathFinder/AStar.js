@@ -65,14 +65,7 @@ export class AStar {
         this.reset()
             .addOpen(new Step(startX, startY, endX, endY, this.step, false));
 
-        let i = 0;
-
         while (this.open.length !== 0) {
-
-            i ++;
-            if(i > config2.MAP_SIZE_X * config2.MAP_SIZE_Y){
-                break;
-            }
 
             current = this.getBestOpen();
 
