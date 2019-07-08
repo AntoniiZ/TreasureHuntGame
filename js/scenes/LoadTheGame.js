@@ -15,6 +15,13 @@ export class LoadTheGame extends Phaser.Scene{
         this.load.image('treasure', 'assets/treasure.png');
         this.load.image('ice_block', 'assets/ice.png');
 
+        this.load.image('ice6', 'assets/_ice/6.png');
+        this.load.image('ice5', 'assets/_ice/5.png');
+        this.load.image('ice4', 'assets/_ice/4.png');
+        this.load.image('ice3', 'assets/_ice/3.png');
+        this.load.image('ice2', 'assets/_ice/2.png');
+        this.load.image('ice1', 'assets/_ice/1.png');
+
     }
     create(){
         this.background = this.add.image(0, 0, "background");

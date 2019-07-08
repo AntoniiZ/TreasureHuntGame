@@ -1,13 +1,14 @@
 //import {GameMap} from "../GameMap.js";
 import {Trap} from "../api/Trap.js";
 import {Point} from "../api/Point.js";
+import {Ice} from "../api/Ice.js";
 import {AStar} from "../api/pathFinder/AStar.js";
 import {Hero} from "../api/Hero.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
 
-export var x = 32;
-export var y = 480;
+var x = 32;
+var y = 480;
 export var score = 0;
 var results = 0;
 
@@ -22,6 +23,7 @@ export class Maze extends Phaser.Scene {
         var positionX = (32 * x) + 32 * (x - 1);
         var positionY = (32 * y) + 32 * (y - 1);
         var block = this.add.sprite(positionX, positionY, name).setScale(0.5);
+        return block;
     }
 
     setTrap(x, y) {
@@ -44,21 +46,21 @@ export class Maze extends Phaser.Scene {
     }
 
     activateTrap(pointer, gameObject) {
-        if(this.activeTrap != gameObject){
-          var positionX = (gameObject.x - 32) / 64;
-          var positionY = 7 - (480 - gameObject.y) / 64;
+      if(this.activeTrap != gameObject){
+        var positionX = (gameObject.x - 32) / 64;
+        var positionY = 7 - (480 - gameObject.y) / 64;
 
-          console.log(positionX + "; " + positionY);
-          this.field[positionY][positionX] = -1;
+        console.log(positionX + "; " + positionY);
+        this.field[positionY][positionX] = -1;
 
-          if (this.activeTrap != null) {
-              this.unactivateTrap(pointer, this.activeTrap);
-          }
-          gameObject.setTexture("rock2");
-          this.activeTrap = gameObject;
-          this.arr = this.hero.getNewRoute(x, y);
-          this.i = 0;
+        if (this.activeTrap != null) {
+            this.unactivateTrap(pointer, this.activeTrap);
         }
+        gameObject.setTexture("rock2");
+        this.activeTrap = gameObject;
+        this.arr = this.hero.getNewRoute();
+        this.i = 0;
+      }
     }
 
     create() {
@@ -81,7 +83,7 @@ export class Maze extends Phaser.Scene {
         ];
 
 
-
+        this.iceBlocks = new Array();
 
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 16; j++) {
@@ -92,12 +94,16 @@ export class Maze extends Phaser.Scene {
                   this.setTrap(j+1, i+1);
                 } else if(this.field[i][j] === -3) {
                   this.field[i][j] = -1;
-                  this.place(j + 1, i + 1, 'ice_block');
+                  var ice = this.place(j + 1, i + 1, 'ice_block');
+                  var iceBlock = new Ice(j + 1, i + 1, ice, this);
+                  this.iceBlocks.push(iceBlock);
                 } else {
+
                   this.place(j + 1, i + 1, 'tiny_grass');
                 }
             }
         }
+
         this.place(16, 1, 'treasure');
         this.place(1, 8, 'start');
         this.path = new AStar(this.field);
@@ -105,6 +111,8 @@ export class Maze extends Phaser.Scene {
         this.hero = new Hero(this.field, hero, this.path);
         this.i = 1;
         this.arr = this.hero.getNewRoute();
+
+        this.meltingTimer = 0;
 
     }
 
@@ -130,6 +138,17 @@ export class Maze extends Phaser.Scene {
             this.scene.start("end");
         } else {
             score++;
+        }
+        this.meltingTimer++;
+
+        if(this.meltingTimer > 100){
+          this.iceBlocks.forEach(ice => {ice.melt(1000)});
+          this.meltingTimer = 0;
+          this.iceBlocks.forEach(ice => {
+            if(ice.getState() == 1){
+              this.field[ice.getY()-1][ice.getX()-1] = 0;
+            }
+          });
         }
     }
 }
