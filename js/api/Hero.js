@@ -43,19 +43,21 @@ export class Hero {
     }
 
 
-    getNewRoute() {
+    getNewRoute(arr) {
         var x = Math.round(7 - (480 - this.hero.y) / config2.GRID_CELL_SIZE);
         var y = Math.round((this.hero.x - 32) / config2.GRID_CELL_SIZE);
         var a = this.path.findPath(x, y, 0, 15).reverse();
 
-        console.log(x + "; " + y);
-
-        /*if(x == a[0].x && y==a[0].y){
+        if(arr.length > 0){
+          //console.log(arr[0]);
+          //console.log(a[0]);
           a.splice(0, 1);
-        }*/
-
-        console.log(a[0].x +"; "+ a[0].y);
-
+          //console.log(x + "; " + y);
+          if(a[0].x != arr[0].parent.x && a[0].y != arr[0].parent.y){
+            console.log("err");
+            a.unshift(arr[0].parent.parent);
+          }
+        }
         return a;
     }
 

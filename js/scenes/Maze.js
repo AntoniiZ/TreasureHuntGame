@@ -66,7 +66,7 @@ export class Maze extends Phaser.Scene {
             }
             gameObject.setTexture("rock2");
             this.activeTrap = gameObject;
-            this.arr = this.hero.getNewRoute();
+            this.arr = this.hero.getNewRoute(this.arr);
             this.i = 0;
         }
     }
@@ -75,7 +75,7 @@ export class Maze extends Phaser.Scene {
         score = 0;
         this.background = this.add.tileSprite(0, 0, config.width * 4, config.height * 4, "grass").setScale(0.5);
         this.activeTrap = null;
-        this.arr = null;
+        this.arr = new Array();
 
         this.input.on('gameobjectdown', this.activateTrap, this);
 
@@ -116,17 +116,17 @@ export class Maze extends Phaser.Scene {
         this.path = new AStar(this.field);
         var hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
         this.hero = new Hero(this.field, hero, this.path);
-        this.i = 1;
-        this.arr = this.hero.getNewRoute();
+        this.i = 0;
+        this.arr = this.hero.getNewRoute(this.arr);
         this.meltingTimer = 0;
     }
 
     update() {
         if (this.hero.getX() == x && this.hero.getY() == y) {
-            if (this.i < this.arr.length) {
-                x = 32 + config2.GRID_CELL_SIZE * this.arr[this.i].y;
-                y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[this.i].x);
-                this.i++;
+            if (this.arr.length > 0) {
+                x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
+                y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[0].x);
+                this.arr.splice(0 , 1);
             }
         }
         if (this.hero.getX() == x) {
@@ -141,6 +141,10 @@ export class Maze extends Phaser.Scene {
             x = 32;
             y = 480;
             clearTimeout(this.stopedTrap);
+            /*this.iceBlocks.forEach(ice => {
+                ice.end();
+            });*/
+            console.log(this.arr.length);
             this.scene.start("end");
         } else {
             score++;
