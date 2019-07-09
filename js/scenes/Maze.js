@@ -1,4 +1,3 @@
-//import {GameMap} from "../GameMap.js";
 import {Trap} from "../api/Trap.js";
 import {Point} from "../api/Point.js";
 import {Ice} from "../api/Ice.js";
@@ -16,7 +15,6 @@ export class Maze extends Phaser.Scene {
 
     constructor() {
         super("maze");
-
     }
 
     place(x, y, name) {
@@ -43,9 +41,11 @@ export class Maze extends Phaser.Scene {
         let t = this;
         gameObject.visible = false;
         setTimeout(function(){
-          gameObject.setTexture("rock");
-          gameObject.visible = true;
-          gameObject.input.enable = true;
+          if(gameObject != undefined){
+            gameObject.setTexture("rock");
+            gameObject.visible = true;
+            gameObject.input.enable = true;
+          }
         }, 2000);
     }
 
@@ -86,7 +86,6 @@ export class Maze extends Phaser.Scene {
           [0, 0, 0, -1, 0, 0, 0, -2, 0, -3, 0, -2, 0, -2, 0, 0]
         ];
 
-
         this.iceBlocks = new Array();
 
         for (let i = 0; i < 8; i++) {
@@ -115,9 +114,7 @@ export class Maze extends Phaser.Scene {
         this.hero = new Hero(this.field, hero, this.path);
         this.i = 1;
         this.arr = this.hero.getNewRoute();
-
         this.meltingTimer = 0;
-
     }
 
     update() {
@@ -143,10 +140,11 @@ export class Maze extends Phaser.Scene {
         } else {
             score++;
         }
+
         this.meltingTimer++;
 
         if(this.meltingTimer > 100){
-          this.iceBlocks.forEach(ice => {ice.melt()});
+          this.iceBlocks.forEach(ice => {ice.melt(this)});
           this.meltingTimer = 0;
           this.iceBlocks.forEach(ice => {
             if(ice.getState() == 0){

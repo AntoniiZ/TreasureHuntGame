@@ -17,14 +17,16 @@ export class Ice extends Trap {
     }
 
 
-    melt(){
+    melt(scene){
       var t = this;
       console.log(this.state);
-      var ms = Math.floor(Math.random() * (+11000 - +1000)) + +1000;
+      var ms = Math.floor(Math.random() * (+11000 - +1000)) + 1000;
       setTimeout(function(){
         if(t.state > 0){
-          t.ice.setTexture('ice'+t.state);
-          t.updateState();
+          if(scene != undefined){
+            t.ice.setTexture('ice'+t.state);
+            t.updateState();
+          }
         }
       }, ms);
 
