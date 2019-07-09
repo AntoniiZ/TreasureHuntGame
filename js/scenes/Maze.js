@@ -40,7 +40,7 @@ export class Maze extends Phaser.Scene {
         this.field[positionY][positionX] = 0;
         let t = this;
         gameObject.visible = false;
-        setTimeout(function () {
+        this.stopedTrap = setTimeout(function () {
             if (gameObject != undefined) {
                 gameObject.setTexture("rock");
                 gameObject.visible = true;
@@ -80,6 +80,7 @@ export class Maze extends Phaser.Scene {
             this.activeTrap = gameObject;
             this.arr = this.hero.getNewRoute();
             this.i = 0;
+            this.stopedTrap;
         }
     }
 
@@ -152,6 +153,7 @@ export class Maze extends Phaser.Scene {
             results++;
             x = 32;
             y = 480;
+            clearTimeout(this.stopedTrap);
             this.scene.start("end");
         } else {
             score++;
