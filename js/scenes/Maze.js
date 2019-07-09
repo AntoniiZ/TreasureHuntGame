@@ -158,7 +158,7 @@ export class Maze extends Phaser.Scene {
         }
 
         this.meltingTimer++;
-
+        //test
         if (this.meltingTimer > 100) {
             this.iceBlocks.forEach(ice => {
                 ice.melt(this)
