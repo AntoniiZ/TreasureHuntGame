@@ -52,25 +52,15 @@ export class Maze extends Phaser.Scene {
     activateTrap(pointer, gameObject) {
         if (this.activeTrap != gameObject) {
 
-            var positionX = (gameObject.x - 32) / 64;
-            var positionY = 7 - (480 - gameObject.y) / 64;
+            if( this.hero.getY() >= gameObject.y && this.hero.getY() <= gameObject.y + 64 &&
+                this.hero.getX() >= gameObject.x && this.hero.getX() <= gameObject.x + 64){
 
-            let playerPosX = Math.round((this.hero.getX() - 32) / 64);
-            let playerPosX2 = Math.floor((this.hero.getX() - 32) / 64);
-            let playerPosY = Math.round(7 - (480 - this.hero.getY()) / 64);
-            let playerPosY2 = Math.floor(7 - (480 - this.hero.getY()) / 64);
-
-            if(playerPosX === positionX && playerPosY === positionY){
-                return;
-            }
-            if(playerPosX2 === positionX && playerPosY === positionY){
-                return;
-            }
-            if(playerPosX === positionX && playerPosY2 === positionY){
-                return;
+                return "Can't be activated!";
             }
 
-            //console.log(positionX + "; " + positionY);
+            let positionX = (gameObject.x - 32) / 64;
+            let positionY = 7 - (480 - gameObject.y) / 64;
+
             this.field[positionY][positionX] = -1;
 
             if (this.activeTrap != null) {
