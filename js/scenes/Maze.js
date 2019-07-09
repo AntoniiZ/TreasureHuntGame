@@ -40,31 +40,51 @@ export class Maze extends Phaser.Scene {
         this.field[positionY][positionX] = 0;
         let t = this;
         gameObject.visible = false;
-        setTimeout(function(){
-          if(gameObject != undefined){
-            gameObject.setTexture("rock");
-            gameObject.visible = true;
-            gameObject.input.enable = true;
-          }
+        setTimeout(function () {
+            if (gameObject != undefined) {
+                gameObject.setTexture("rock");
+                gameObject.visible = true;
+                gameObject.input.enable = true;
+            }
         }, 2000);
     }
 
     activateTrap(pointer, gameObject) {
-      if(this.activeTrap != gameObject){
-        var positionX = (gameObject.x - 32) / 64;
-        var positionY = 7 - (480 - gameObject.y) / 64;
+        if (this.activeTrap != gameObject) {
 
-        console.log(positionX + "; " + positionY);
-        this.field[positionY][positionX] = -1;
+            var positionX = (gameObject.x - 32) / 64;
+            var positionY = 7 - (480 - gameObject.y) / 64;
 
-        if (this.activeTrap != null) {
-            this.unactivateTrap(this.activeTrap);
+            let playerPosX = Math.round((this.hero.getX() - 32) / 64);
+            let playerPosX2 = Math.floor((this.hero.getX() - 32) / 64);
+            let playerPosY = Math.round(7 - (480 - this.hero.getY()) / 64);
+            let playerPosY2 = Math.floor(7 - (480 - this.hero.getY()) / 64);
+
+            console.log(playerPosX + "- " + playerPosY);
+            if(playerPosX === positionX && playerPosY === positionY){
+                console.error("FOUND");
+                return;
+            }
+            if(playerPosX2 === positionX && playerPosY === positionY){
+                console.error("FOUND");
+                return;
+            }
+            if(playerPosX === positionX && playerPosY2 === positionY){
+                console.error("FOUND");
+                return;
+            }
+
+            console.log(positionX + "; " + positionY);
+            this.field[positionY][positionX] = -1;
+
+            if (this.activeTrap != null) {
+                this.unactivateTrap(this.activeTrap);
+            }
+            gameObject.setTexture("rock2");
+            this.activeTrap = gameObject;
+            this.arr = this.hero.getNewRoute();
+            this.i = 0;
         }
-        gameObject.setTexture("rock2");
-        this.activeTrap = gameObject;
-        this.arr = this.hero.getNewRoute();
-        this.i = 0;
-      }
     }
 
     create() {
@@ -76,14 +96,14 @@ export class Maze extends Phaser.Scene {
         this.input.on('gameobjectdown', this.activateTrap, this);
 
         this.field = [
-          [0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, 0],
-          [0, -2, 0, 0, 0, -2, 0, -3, 0, -2, 0, -3, 0, -2, 0, 0],
-          [-2, -1, -2, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -2, -1],
-          [0, 0, 0, -3, 0, -3, 0, -2, 0, -3, 0, -2, 0, -3, 0, 0],
-          [-2, -1, 0, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -2, -1],
-          [0, -2, 0, -2, 0, -3, 0, -3, 0, -2, 0, -3, 0, -2, 0, 0],
-          [0, -1, -2, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -3, -1],
-          [0, 0, 0, -1, 0, 0, 0, -2, 0, -3, 0, -2, 0, -2, 0, 0]
+            [0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, 0],
+            [0, -2, 0, 0, 0, -2, 0, -3, 0, -2, 0, -3, 0, -2, 0, 0],
+            [-2, -1, -2, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -2, -1],
+            [0, 0, 0, -3, 0, -3, 0, -2, 0, -3, 0, -2, 0, -3, 0, 0],
+            [-2, -1, 0, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -2, -1],
+            [0, -2, 0, -2, 0, -3, 0, -3, 0, -2, 0, -3, 0, -2, 0, 0],
+            [0, -1, -2, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -3, -1],
+            [0, 0, 0, -1, 0, 0, 0, -2, 0, -3, 0, -2, 0, -2, 0, 0]
         ];
 
         this.iceBlocks = new Array();
@@ -92,17 +112,17 @@ export class Maze extends Phaser.Scene {
             for (let j = 0; j < 16; j++) {
                 if (this.field[i][j] === -1) {
                     this.place(j + 1, i + 1, 'stone');
-                } else if(this.field[i][j] === -2){
-                  this.field[i][j] = 0;
-                  this.setTrap(j+1, i+1);
-                } else if(this.field[i][j] === -3) {
-                  this.field[i][j] = -1;
-                  var ice = this.place(j + 1, i + 1, 'ice_block');
-                  var iceBlock = new Ice(j + 1, i + 1, ice, this);
-                  this.iceBlocks.push(iceBlock);
+                } else if (this.field[i][j] === -2) {
+                    this.field[i][j] = 0;
+                    this.setTrap(j + 1, i + 1);
+                } else if (this.field[i][j] === -3) {
+                    this.field[i][j] = -1;
+                    var ice = this.place(j + 1, i + 1, 'ice_block');
+                    var iceBlock = new Ice(j + 1, i + 1, ice, this);
+                    this.iceBlocks.push(iceBlock);
                 } else {
 
-                  this.place(j + 1, i + 1, 'tiny_grass');
+                    this.place(j + 1, i + 1, 'tiny_grass');
                 }
             }
         }
@@ -121,7 +141,7 @@ export class Maze extends Phaser.Scene {
         if (this.hero.getX() == x && this.hero.getY() == y) {
             if (this.i < this.arr.length) {
                 x = 32 + config2.GRID_CELL_SIZE * this.arr[this.i].y;
-                y = 480 - config2.GRID_CELL_SIZE * (7-this.arr[this.i].x);
+                y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[this.i].x);
                 this.i++;
             }
         }
@@ -143,15 +163,17 @@ export class Maze extends Phaser.Scene {
 
         this.meltingTimer++;
 
-        if(this.meltingTimer > 100){
-          this.iceBlocks.forEach(ice => {ice.melt(this)});
-          this.meltingTimer = 0;
-          this.iceBlocks.forEach(ice => {
-            if(ice.getState() == 0){
-              console.log(ice.getState());
-              this.field[ice.getY()-1][ice.getX()-1] = 0;
-            }
-          });
+        if (this.meltingTimer > 100) {
+            this.iceBlocks.forEach(ice => {
+                ice.melt(this)
+            });
+            this.meltingTimer = 0;
+            this.iceBlocks.forEach(ice => {
+                if (ice.getState() == 0) {
+                    console.log(ice.getState());
+                    this.field[ice.getY() - 1][ice.getX() - 1] = 0;
+                }
+            });
         }
     }
 }

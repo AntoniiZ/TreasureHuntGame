@@ -39,9 +39,12 @@ export class Hero {
 
 
     getNewRoute() {
-        return this.path.findPath(
+        let a = this.path.findPath(
             Math.round(7 - (480 - this.hero.y) / config2.GRID_CELL_SIZE),
             Math.round((this.hero.x - 32) / config2.GRID_CELL_SIZE),
             0, 15).reverse();
+        a.splice(0, 1);
+        return a;
+
     }
 }
