@@ -60,21 +60,17 @@ export class Maze extends Phaser.Scene {
             let playerPosY = Math.round(7 - (480 - this.hero.getY()) / 64);
             let playerPosY2 = Math.floor(7 - (480 - this.hero.getY()) / 64);
 
-            console.log(playerPosX + "- " + playerPosY);
             if(playerPosX === positionX && playerPosY === positionY){
-                console.error("FOUND");
                 return;
             }
             if(playerPosX2 === positionX && playerPosY === positionY){
-                console.error("FOUND");
                 return;
             }
             if(playerPosX === positionX && playerPosY2 === positionY){
-                console.error("FOUND");
                 return;
             }
 
-            console.log(positionX + "; " + positionY);
+            //console.log(positionX + "; " + positionY);
             this.field[positionY][positionX] = -1;
 
             if (this.activeTrap != null) {
