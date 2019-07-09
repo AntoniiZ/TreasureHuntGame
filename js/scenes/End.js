@@ -19,7 +19,7 @@ export class End extends Phaser.Scene{
      }
     create(){
         var scores = this.SortSessionStorage();
-        this.add.text(450, 200, "Score: " + (score-383));
+        this.add.text(450, 200, "Score: " + (score-479));
         for(var i=0; i<4;i++){
             if(scores[i]){
                 //this.add.text(450, 250 + i*20, "" + (i+1) + ".Score: " + scores[i]);
