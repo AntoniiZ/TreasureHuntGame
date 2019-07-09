@@ -52,7 +52,7 @@ export class Maze extends Phaser.Scene {
     activateTrap(pointer, gameObject) {
         if (this.activeTrap != gameObject) {
 
-            if( this.hero.getY() >= gameObject.y && this.hero.getY() <= gameObject.y + 64 &&
+            if( this.hero.getY() + 64 >= gameObject.y && this.hero.getY() <= gameObject.y + 64 &&
                 this.hero.getX() >= gameObject.x && this.hero.getX() <= gameObject.x + 64){
 
                 return "Can't be activated!";
