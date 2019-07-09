@@ -8,23 +8,10 @@ export class End extends Phaser.Scene{
         this.load.image('playAgain', 'assets/playAgainButtonNorm.png');
         this.load.image('playAgain1', 'assets/playAgainButtonNorm1.png');
     }
-    SortSessionStorage(){
-        if(sessionStorage.length > 0){
-           var sessionStorageArray = [];
-           for (var i=0;i<sessionStorage.length;i++){
-                sessionStorageArray[i] = sessionStorage.getItem(sessionStorage.key(i));
-           }
-        }
-        return sessionStorageArray.sort();
-     }
+
     create(){
-        var scores = this.SortSessionStorage();
-        this.add.text(450, 200, "Score: " + (score-383));
-        for(var i=0; i<4;i++){
-            if(scores[i]){
-                //this.add.text(450, 250 + i*20, "" + (i+1) + ".Score: " + scores[i]);
-            }
-        }
+        this.add.text(450, 200, "Score: " + (score-479));
+
 
         var playAgain = this.add.image(512, 400, 'playAgain1');
         playAgain.setInteractive();
@@ -37,7 +24,7 @@ export class End extends Phaser.Scene{
 
         playAgain.on('pointerout',function(pointer){
             playAgain.setTexture('playAgain1');
-        })﻿﻿;
+        });
     }
 
     StartGame(){
