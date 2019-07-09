@@ -19,7 +19,6 @@ export class Ice extends Trap {
 
     melt(scene){
       var t = this;
-      console.log(this.state);
       var ms = Math.floor(Math.random() * (+11000 - +1000)) + 1000;
       setTimeout(function(){
         if(t.state > 0){

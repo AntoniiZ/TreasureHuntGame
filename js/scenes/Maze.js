@@ -35,8 +35,6 @@ export class Maze extends Phaser.Scene {
     unactivateTrap(gameObject) {
         var positionX = (gameObject.x - 32) / config2.GRID_CELL_SIZE;
         var positionY = 7 - (480 - gameObject.y) / config2.GRID_CELL_SIZE;
-
-        console.log(positionX + "; " + positionY);
         this.field[positionY][positionX] = 0;
         let t = this;
         gameObject.visible = false;
