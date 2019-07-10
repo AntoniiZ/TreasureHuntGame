@@ -5,7 +5,6 @@ import {Hero} from "../api/Hero.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
 import {MapGenerator} from "../api/MapGenerator.js";
-import {BFS} from "../api/pathFinder/BFS.js";
 
 var x = 32;
 var y = 480;
@@ -54,8 +53,8 @@ export class Maze extends Phaser.Scene {
     activateTrap(pointer, gameObject) {
         if (this.activeTrap != gameObject) {
 
-            if( this.hero.getY() > gameObject.y - 64 && this.hero.getY() < gameObject.y + 64 &&
-                this.hero.getX() > gameObject.x - 64 && this.hero.getX() < gameObject.x + 64){
+            if (this.hero.getY() > gameObject.y - 64 && this.hero.getY() < gameObject.y + 64 &&
+                this.hero.getX() > gameObject.x - 64 && this.hero.getX() < gameObject.x + 64) {
 
                 return "Can't be activated!";
             }
@@ -71,6 +70,9 @@ export class Maze extends Phaser.Scene {
             gameObject.setTexture("rock2");
             this.activeTrap = gameObject;
             this.arr = this.hero.getNewRoute(this.arr);
+            if(this.arr === null){
+             ///   this.scene.start("end");
+            }
             this.i = 0;
         }
     }
@@ -83,8 +85,8 @@ export class Maze extends Phaser.Scene {
 
         this.input.on('gameobjectdown', this.activateTrap, this);
 
-        this.field = MapGenerator.fixed();
-
+        this.field = MapGenerator.randomized(8, 16);
+        console.log(this.field);
         this.iceBlocks = [];
 
         for (let i = 0; i < 8; i++) {
@@ -107,9 +109,8 @@ export class Maze extends Phaser.Scene {
         }
 
         this.place(16, 1, 'treasure');
-        //this.place(1, 8, 'start');
-        this.path = new BFS(this.field);
-        //this.path = new AStar(this.field);
+        this.place(1, 8, 'start');
+        this.path = new AStar(this.field);
         var hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
         this.hero = new Hero(this.field, hero, this.path);
         this.i = 0;
@@ -118,44 +119,44 @@ export class Maze extends Phaser.Scene {
     }
 
     update() {
-        if (this.hero.getX() == x && this.hero.getY() == y) {
-            if (this.arr.length > 0) {
-                x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
-                y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[0].x);
-                this.arr.splice(0 , 1);
+        if(this.arr !== null) {
+            if (this.hero.getX() == x && this.hero.getY() == y) {
+                if (this.arr.length > 0) {
+                    x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
+                    y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[0].x);
+                    this.arr.splice(0, 1);
+                }
+            }
+            if (this.hero.getX() == x) {
+                this.hero.moveHeroY(y);
+            } else {
+                this.hero.moveHeroX(x);
+            }
+
+            if (this.hero.getX() == 992 && this.hero.getY() == 32) {
+                sessionStorage.setItem(results, score);
+                results++;
+                x = 32;
+                y = 480;
+                clearTimeout(this.stopedTrap);
+                /*this.iceBlocks.forEach(ice => {
+                    ice.end();
+                });*/
+                console.log(this.arr.length);
+                this.scene.start("end");
+            } else {
+                score++;
             }
         }
-        if (this.hero.getX() == x) {
-            this.hero.moveHeroY(y);
-        } else {
-            this.hero.moveHeroX(x);
-        }
-
-        if (this.hero.getX() == 992 && this.hero.getY() == 32) {
-            sessionStorage.setItem(results, score);
-            results++;
-            x = 32;
-            y = 480;
-            clearTimeout(this.stopedTrap);
-            /*this.iceBlocks.forEach(ice => {
-                ice.end();
-            });*/
-            console.log(this.arr.length);
-            this.scene.start("end");
-        } else {
-            score++;
-        }
-
         this.meltingTimer++;
 
         if (this.meltingTimer > 100) {
             this.iceBlocks.forEach(ice => {
-                ice.melt(this)
+                ice.melt()
             });
             this.meltingTimer = 0;
             this.iceBlocks.forEach(ice => {
-                if (ice.getState() == 0) {
-                    console.log(ice.getState());
+                if (!ice.getState()) {
                     this.field[ice.getY() - 1][ice.getX() - 1] = 0;
                 }
             });
