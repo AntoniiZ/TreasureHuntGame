@@ -31,7 +31,8 @@ export class AStarMap {
         return neighbors;
     }
 
-    getField(x, y) {
-        return this.map[x][y];
+    getCost (startX, startY, endX, endY) {
+        if(endY < 8)
+        return this.map[endY][endX];
     }
 }
