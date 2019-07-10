@@ -1,6 +1,6 @@
-import {Trap} from "./Trap.js";
+import {Point} from "./Point.js";
 
-export class Ice extends Trap {
+export class Ice extends Point {
     constructor(x, y, name, maze){
         super(x, y, name);
         this.ice = name;
@@ -17,7 +17,7 @@ export class Ice extends Trap {
     }
 
 
-    melt(scene){
+    melt(){
       var t = this;
       var ms = Math.floor(Math.random() * (+11000 - +1000)) + 1000;
       setTimeout(function(){

@@ -1,10 +1,10 @@
-import {Trap} from "../api/Trap.js";
 import {Point} from "../api/Point.js";
 import {Ice} from "../api/Ice.js";
 import {AStar} from "../api/pathFinder/AStar.js";
 import {Hero} from "../api/Hero.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
+import {MapGenerator} from "../api/MapGenerator.js";
 
 var x = 32;
 var y = 480;
@@ -25,11 +25,14 @@ export class Maze extends Phaser.Scene {
     }
 
     setTrap(x, y) {
-        var positionX = (x * 32) + 32 * (x - 1);
+        /*var positionX = (x * 32) + 32 * (x - 1);
         var positionY = (y * 32) + 32 * (y - 1);
         var rock = this.add.sprite(positionX, positionY, 'rock').setScale(0.5);
+
+
         var trap = new Trap(positionX, positionY, rock);
-        trap.get().setInteractive();
+        trap.get().setInteractive();*/
+        this.place(x, y, 'rock').setInteractive();
     }
 
     unactivateTrap(gameObject) {
@@ -75,22 +78,13 @@ export class Maze extends Phaser.Scene {
         score = 0;
         this.background = this.add.tileSprite(0, 0, config.width * 4, config.height * 4, "grass").setScale(0.5);
         this.activeTrap = null;
-        this.arr = new Array();
+        this.arr = [];
 
         this.input.on('gameobjectdown', this.activateTrap, this);
 
-        this.field = [
-            [0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, 0],
-            [0, -2, 0, 0, 0, -2, 0, -3, 0, -2, 0, -3, 0, -2, 0, 0],
-            [-2, -1, -2, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -2, -1],
-            [0, 0, 0, -3, 0, -3, 0, -2, 0, -3, 0, -2, 0, -3, 0, 0],
-            [-2, -1, 0, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -2, -1],
-            [0, -2, 0, -2, 0, -3, 0, -3, 0, -2, 0, -3, 0, -2, 0, 0],
-            [0, -1, -2, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -3, -1],
-            [0, 0, 0, -1, 0, 0, 0, -2, 0, -3, 0, -2, 0, -2, 0, 0]
-        ];
+        this.field = MapGenerator.fixed();
 
-        this.iceBlocks = new Array();
+        this.iceBlocks = [];
 
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 16; j++) {
