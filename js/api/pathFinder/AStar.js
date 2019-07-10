@@ -64,7 +64,9 @@ export class AStar {
         this.reset()
             .addOpen(new Step(startX, startY, endX, endY, this.step, false));
 
+        let tries = 0;
         while (this.open.length !== 0) {
+
             current = this.getBestOpen();
 
             if (current.x === endX && current.y === endY) {
@@ -93,6 +95,12 @@ export class AStar {
                         neighborRecord.f = stepCost + neighborRecord.h;
                     }
                 }
+            }
+
+            tries ++;
+            if(tries > this.map.map[0].length * this.map.map.length * 10){
+                console.error("Path wasn't found!");
+                break;
             }
         }
 
