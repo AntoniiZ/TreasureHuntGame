@@ -109,7 +109,7 @@ export class Maze extends Phaser.Scene {
         this.place(16, 1, 'treasure');
         //this.place(1, 8, 'start');
         this.path = new BFS(this.field);
-        this.path = new AStar(this.field);
+        //this.path = new AStar(this.field);
         var hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
         this.hero = new Hero(this.field, hero, this.path);
         this.i = 0;

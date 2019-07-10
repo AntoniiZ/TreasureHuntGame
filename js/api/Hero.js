@@ -49,8 +49,8 @@ export class Hero {
         var a = this.path.findPath(x, y, 0, 15).reverse();
 
         if(arr.length > 0){
-          //console.log(arr[0]);
-          //console.log(a[0]);
+          console.log(arr[0]);
+          console.log(a[0]);
           a.splice(0, 1);
           //console.log(x + "; " + y);
           if(a[0].x != arr[0].parent.x && a[0].y != arr[0].parent.y){
