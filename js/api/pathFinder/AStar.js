@@ -78,7 +78,7 @@ export class AStar {
             neighbors = this.map.getNeighbors(current.x, current.y);
             for (let i = 0; i < neighbors.length; i++) {
 
-                stepCost = current.g + this.map.getCost(neighbors[i].x, neighbors[i].y);
+                stepCost = current.g;
 
                 neighborRecord = this.inClosed(neighbors[i]);
                 if (neighborRecord && stepCost >= neighborRecord.g) {
