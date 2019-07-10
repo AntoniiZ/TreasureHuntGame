@@ -7,7 +7,11 @@ describe('AStar', () => {
         step;
 
     beforeEach(() => {
-        maze = [3, 4, 5];
+        maze = [
+            [ 0,  0,  0, 0,-1],
+            [ 0, -1, -1, 0, 0],
+            [ 0,  0,  0, 0,-1],
+        ];
         aStar = new AStar(maze);
         step = new Step(2, 3, 6, 7, 2, false);
     });
@@ -26,6 +30,34 @@ describe('AStar', () => {
         aStar.addOpen(step);
         aStar.removeOpen(step);
         expect(aStar.open).toEqual([]);
+    });
+
+    it("AStar -> getBestOpen()", () => {
+        aStar.addOpen(step);
+        aStar.addOpen(new Step(2, 3, 6, 7, 3, false));
+        expect(aStar.getBestOpen()).toEqual(step);
+    });
+
+    it("AStar -> findPath()", () => {
+        expect(aStar.findPath(0, 0, 1, 4).length).toBe(6);
+        expect(aStar.findPath(0, 0, 2, 2).length).toBe(5);
+    });
+
+    it("AStar -> reset()", () => {
+        aStar.addOpen(step);
+        aStar.addClosed(step);
+        aStar.reset();
+        expect(aStar.open).toEqual([]);
+        expect(aStar.closed).toEqual([]);
+    });
+
+    it("AStar -> buildPath()", () => {
+        let s1 = new Step(0, 0, 1, 0, 1, false);
+        let s2 = new Step(1, 0, 2, 0, 2, s1);
+        let s3 = new Step(2, 1, null, null, 3, s2);
+
+        console.log(aStar.buildPath(s3, []));
+        expect(aStar.buildPath(s3, []).length).toBe(3);
     });
 
 });
