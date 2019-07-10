@@ -4,7 +4,6 @@ export class AStarMap {
 
     constructor(map) {
         this.map = map;
-        console.log(this.map);
     }
 
     outOfBounds(x, y) {
@@ -32,7 +31,7 @@ export class AStarMap {
         return neighbors;
     }
 
-    getCost(x, y) {
+    getField(x, y) {
         return this.map[x][y];
     }
 }
