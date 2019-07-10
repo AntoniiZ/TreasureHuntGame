@@ -14,7 +14,7 @@ export class End extends Phaser.Scene{
     create(){
         this.background = this.add.tileSprite(0, 0, config.width * 4, config.height * 4, "stone").setScale(0.5);
 
-        var label =this.add.text(350, 185, "Score: " + (score-480), {
+        var label =this.add.text(350, 185, "Score: " + (score-512+96), {
           font: "bold 32px Arial",
           color: "white",
           align: 'center'
