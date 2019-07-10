@@ -5,6 +5,7 @@ import {Hero} from "../api/Hero.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
 import {MapGenerator} from "../api/MapGenerator.js";
+import {BFS} from "../api/pathFinder/BFS.js";
 
 var x = 32;
 var y = 480;
@@ -106,7 +107,8 @@ export class Maze extends Phaser.Scene {
         }
 
         this.place(16, 1, 'treasure');
-        this.place(1, 8, 'start');
+        //this.place(1, 8, 'start');
+        this.path = new BFS(this.field);
         this.path = new AStar(this.field);
         var hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
         this.hero = new Hero(this.field, hero, this.path);
