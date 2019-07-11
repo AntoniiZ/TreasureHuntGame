@@ -10,7 +10,8 @@ export class End extends Phaser.Scene{
     preload(){
         this.load.image('playAgain', 'assets/playAgainButtonNorm.png');
         this.load.image('playAgain1', 'assets/playAgainButtonNorm1.png');
-        this.load.image('playAgainRandom', 'assets/playAgainRandom.png');
+        this.load.image('playAgainRandom', 'assets/playAgainRandom2.png');
+        this.load.image('playAgainRandom01', 'assets/playAgainRandom1.png');
         this.load.image('stone', 'assets/stone01.png');
     }
 
@@ -26,7 +27,7 @@ export class End extends Phaser.Scene{
 
 
         var playAgain = this.add.image(700, 400, 'playAgain1');
-        this.playAgainRandom = this.add.image(300, 400, 'playAgainRandom');
+        this.playAgainRandom = this.add.image(300, 400, 'playAgainRandom01');
 
         playAgain.setInteractive();
         this.playAgainRandom.setInteractive();
@@ -39,6 +40,15 @@ export class End extends Phaser.Scene{
 
         playAgain.on('pointerout',function(pointer){
             playAgain.setTexture('playAgain1');
+        });
+        var t = this;
+
+        this.playAgainRandom.on('pointerover', function(pointer){
+            t.playAgainRandom.setTexture('playAgainRandom');
+        });
+
+        this.playAgainRandom.on('pointerout',function(pointer){
+            t.playAgainRandom.setTexture('playAgainRandom01');
         });
     }
 
