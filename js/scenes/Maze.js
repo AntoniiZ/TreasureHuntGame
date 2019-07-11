@@ -5,6 +5,7 @@ import {Hero} from "../api/Hero.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
 import {MapGenerator} from "../api/MapGenerator.js";
+import {withRandom} from "../scenes/End.js";
 
 var x = 32;
 var y = 480;
@@ -53,8 +54,8 @@ export class Maze extends Phaser.Scene {
     activateTrap(pointer, gameObject) {
         if (this.activeTrap != gameObject) {
 
-            if( this.hero.getY() > gameObject.y - 64 && this.hero.getY() < gameObject.y + 64 &&
-                this.hero.getX() > gameObject.x - 64 && this.hero.getX() < gameObject.x + 64){
+            if (this.hero.getY() > gameObject.y - 64 && this.hero.getY() < gameObject.y + 64 &&
+                this.hero.getX() > gameObject.x - 64 && this.hero.getX() < gameObject.x + 64) {
 
                 return "Can't be activated!";
             }
@@ -70,20 +71,27 @@ export class Maze extends Phaser.Scene {
             gameObject.setTexture("rock2");
             this.activeTrap = gameObject;
             this.arr = this.hero.getNewRoute(this.arr);
+            if(this.arr === null){
+             ///   this.scene.start("end");
+            }
             this.i = 0;
         }
     }
 
     create() {
+        console.log(withRandom);
         score = 0;
         this.background = this.add.tileSprite(0, 0, config.width * 4, config.height * 4, "grass").setScale(0.5);
         this.activeTrap = null;
         this.arr = [];
 
         this.input.on('gameobjectdown', this.activateTrap, this);
-
-        this.field = MapGenerator.fixed();
-
+        if(withRandom){
+          this.field = MapGenerator.randomized(8, 16);
+        }else{
+          this.field = MapGenerator.fixed(8, 16);
+        }
+        console.log(this.field);
         this.iceBlocks = [];
 
         for (let i = 0; i < 8; i++) {
@@ -116,44 +124,49 @@ export class Maze extends Phaser.Scene {
     }
 
     update() {
-        if (this.hero.getX() == x && this.hero.getY() == y) {
-            if (this.arr.length > 0) {
-                x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
-                y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[0].x);
-                this.arr.splice(0 , 1);
+        if(this.arr !== null) {
+            if (this.hero.getX() == x && this.hero.getY() == y) {
+                if (this.arr.length > 0) {
+                    x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
+                    y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[0].x);
+                    this.arr.splice(0, 1);
+                }
+            }
+            if (this.hero.getX() == x) {
+                this.hero.moveHeroY(y);
+            } else {
+                this.hero.moveHeroX(x);
+            }
+
+            if (this.hero.getX() == 992 && this.hero.getY() == 32) {
+                sessionStorage.setItem(results, score);
+                results++;
+                x = 32;
+                y = 480;
+                clearTimeout(this.stopedTrap);
+                /*this.iceBlocks.forEach(ice => {
+                    ice.end();
+                });*/
+                console.log(this.arr.length);
+                this.scene.start("end");
+            } else {
+                if(!withRandom){
+                  score++;
+                }else{
+                  score = 512+96;
+                }
+
             }
         }
-        if (this.hero.getX() == x) {
-            this.hero.moveHeroY(y);
-        } else {
-            this.hero.moveHeroX(x);
-        }
-
-        if (this.hero.getX() == 992 && this.hero.getY() == 32) {
-            sessionStorage.setItem(results, score);
-            results++;
-            x = 32;
-            y = 480;
-            clearTimeout(this.stopedTrap);
-            /*this.iceBlocks.forEach(ice => {
-                ice.end();
-            });*/
-            console.log(this.arr.length);
-            this.scene.start("end");
-        } else {
-            score++;
-        }
-
         this.meltingTimer++;
         //test
         if (this.meltingTimer > 100) {
             this.iceBlocks.forEach(ice => {
-                ice.melt(this)
+                ice.melt()
             });
             this.meltingTimer = 0;
             this.iceBlocks.forEach(ice => {
-                if (ice.getState() == 0) {
-                    console.log(ice.getState());
+                if (!ice.getState()) {
                     this.field[ice.getY() - 1][ice.getX() - 1] = 0;
                 }
             });
