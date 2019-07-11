@@ -1,10 +1,11 @@
-import {Trap} from "../api/Trap.js";
 import {Point} from "../api/Point.js";
 import {Ice} from "../api/Ice.js";
 import {AStar} from "../api/pathFinder/AStar.js";
 import {Hero} from "../api/Hero.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
+import {MapGenerator} from "../api/MapGenerator.js";
+import {withRandom} from "../scenes/End.js";
 
 var x = 32;
 var y = 480;
@@ -25,11 +26,14 @@ export class Maze extends Phaser.Scene {
     }
 
     setTrap(x, y) {
-        var positionX = (x * 32) + 32 * (x - 1);
+        /*var positionX = (x * 32) + 32 * (x - 1);
         var positionY = (y * 32) + 32 * (y - 1);
         var rock = this.add.sprite(positionX, positionY, 'rock').setScale(0.5);
+
+
         var trap = new Trap(positionX, positionY, rock);
-        trap.get().setInteractive();
+        trap.get().setInteractive();*/
+        this.place(x, y, 'rock').setInteractive();
     }
 
     unactivateTrap(gameObject) {
@@ -50,8 +54,8 @@ export class Maze extends Phaser.Scene {
     activateTrap(pointer, gameObject) {
         if (this.activeTrap != gameObject) {
 
-            if( this.hero.getY() > gameObject.y - 64 && this.hero.getY() < gameObject.y + 64 &&
-                this.hero.getX() > gameObject.x - 64 && this.hero.getX() < gameObject.x + 64){
+            if (this.hero.getY() > gameObject.y - 64 && this.hero.getY() < gameObject.y + 64 &&
+                this.hero.getX() > gameObject.x - 64 && this.hero.getX() < gameObject.x + 64) {
 
                 return "Can't be activated!";
             }
@@ -67,30 +71,24 @@ export class Maze extends Phaser.Scene {
             gameObject.setTexture("rock2");
             this.activeTrap = gameObject;
             this.arr = this.hero.getNewRoute(this.arr);
-            this.i = 0;
         }
     }
 
     create() {
+        console.log(withRandom);
         score = 0;
         this.background = this.add.tileSprite(0, 0, config.width * 4, config.height * 4, "grass").setScale(0.5);
         this.activeTrap = null;
-        this.arr = new Array();
+        this.arr = [];
 
         this.input.on('gameobjectdown', this.activateTrap, this);
-
-        this.field = [
-            [0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, 0],
-            [0, -2, 0, 0, 0, -2, 0, -3, 0, -2, 0, -3, 0, -2, 0, 0],
-            [-2, -1, -2, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -2, -1],
-            [0, 0, 0, -3, 0, -3, 0, -2, 0, -3, 0, -2, 0, -3, 0, 0],
-            [-2, -1, 0, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -2, -1],
-            [0, -2, 0, -2, 0, -3, 0, -3, 0, -2, 0, -3, 0, -2, 0, 0],
-            [0, -1, -2, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -3, -1],
-            [0, 0, 0, -1, 0, 0, 0, -2, 0, -3, 0, -2, 0, -2, 0, 0]
-        ];
-
-        this.iceBlocks = new Array();
+        if (!withRandom) {
+            this.field = MapGenerator.fixed();
+        } else {
+            this.field = MapGenerator.randomized(8, 16);
+        }
+        console.log(this.field);
+        this.iceBlocks = [];
 
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 16; j++) {
@@ -122,43 +120,44 @@ export class Maze extends Phaser.Scene {
     }
 
     update() {
-        if (this.hero.getX() == x && this.hero.getY() == y) {
-            if (this.arr.length > 0) {
-                x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
-                y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[0].x);
-                this.arr.splice(0 , 1);
+        if (this.arr !== null) {
+            if (this.hero.getX() == x && this.hero.getY() == y) {
+                if (this.arr.length > 0) {
+                    x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
+                    y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[0].x);
+                    this.arr.splice(0, 1);
+                }
+            }
+            if (this.hero.getX() == x) {
+                this.hero.moveHeroY(y);
+            } else {
+                this.hero.moveHeroX(x);
+            }
+
+            if (this.hero.getX() == 992 && this.hero.getY() == 32) {
+                sessionStorage.setItem(results, score);
+                results++;
+                x = 32;
+                y = 480;
+                clearTimeout(this.stopedTrap);
+                /*this.iceBlocks.forEach(ice => {
+                    ice.end();
+                });*/
+                console.log(this.arr.length);
+                this.scene.start("end");
+            } else {
+                score++;
             }
         }
-        if (this.hero.getX() == x) {
-            this.hero.moveHeroY(y);
-        } else {
-            this.hero.moveHeroX(x);
-        }
-
-        if (this.hero.getX() == 992 && this.hero.getY() == 32) {
-            sessionStorage.setItem(results, score);
-            results++;
-            x = 32;
-            y = 480;
-            clearTimeout(this.stopedTrap);
-            /*this.iceBlocks.forEach(ice => {
-                ice.end();
-            });*/
-            console.log(this.arr.length);
-            this.scene.start("end");
-        } else {
-            score++;
-        }
-
         this.meltingTimer++;
 
         if (this.meltingTimer > 100) {
             this.iceBlocks.forEach(ice => {
-                ice.melt(this)
+                ice.melt()
             });
             this.meltingTimer = 0;
             this.iceBlocks.forEach(ice => {
-                if (ice.getState() == 0) {
+                if (!ice.getState()) {
                     this.field[ice.getY() - 1][ice.getX() - 1] = 0;
                 }
             });

@@ -11,7 +11,8 @@ export class AStar {
     }
 
     addOpen(step) {
-        this.open.push(step);
+        if(! this.inClosed(step))
+            this.open.push(step);
         return this;
     }
 
@@ -62,7 +63,7 @@ export class AStar {
             stepCost;
 
         this.reset()
-            .addOpen(new Step(startX, startY, endX, endY, 0, false));
+            .addOpen(new Step(startX, startY, endX, endY, this.step, false));
 
         while (this.open.length !== 0) {
 
@@ -77,8 +78,7 @@ export class AStar {
 
             neighbors = this.map.getNeighbors(current.x, current.y);
             for (let i = 0; i < neighbors.length; i++) {
-
-                stepCost = current.g + this.map.getCost(neighbors[i].x, neighbors[i].y);
+                stepCost = current.g + this.map.getCost(current.x, current.y, neighbors[i].x, neighbors[i].y);
 
                 neighborRecord = this.inClosed(neighbors[i]);
                 if (neighborRecord && stepCost >= neighborRecord.g) {
@@ -98,7 +98,6 @@ export class AStar {
             }
         }
 
-        console.warn("Can't find path!");
         return [];
     }
 
