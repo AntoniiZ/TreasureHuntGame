@@ -33,6 +33,6 @@ export class AStarMap {
 
     getCost (startX, startY, endX, endY) {
         if(endY < 8)
-        return this.map[endY][endX];
+            return this.map[endY][endX];
     }
 }

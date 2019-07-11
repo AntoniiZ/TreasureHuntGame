@@ -71,10 +71,6 @@ export class Maze extends Phaser.Scene {
             gameObject.setTexture("rock2");
             this.activeTrap = gameObject;
             this.arr = this.hero.getNewRoute(this.arr);
-            if(this.arr === null){
-             ///   this.scene.start("end");
-            }
-            this.i = 0;
         }
     }
 
@@ -86,10 +82,10 @@ export class Maze extends Phaser.Scene {
         this.arr = [];
 
         this.input.on('gameobjectdown', this.activateTrap, this);
-        if(withRandom){
-          this.field = MapGenerator.randomized(8, 16);
+        if(!withRandom){
+            this.field = MapGenerator.fixed();
         }else{
-          this.field = MapGenerator.fixed(8, 16);
+            this.field = MapGenerator.randomized(8, 16);
         }
         console.log(this.field);
         this.iceBlocks = [];
@@ -125,6 +121,10 @@ export class Maze extends Phaser.Scene {
 
     update() {
         if(this.arr !== null) {
+            if(!this.arr.length){
+                this.arr = this.hero.getNewRoute(this.arr);
+            }
+
             if (this.hero.getX() == x && this.hero.getY() == y) {
                 if (this.arr.length > 0) {
                     x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
@@ -150,12 +150,7 @@ export class Maze extends Phaser.Scene {
                 console.log(this.arr.length);
                 this.scene.start("end");
             } else {
-                if(!withRandom){
-                  score++;
-                }else{
-                  score = 512+96;
-                }
-
+                score++;
             }
         }
         this.meltingTimer++;

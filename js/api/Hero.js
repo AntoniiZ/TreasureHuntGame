@@ -8,6 +8,7 @@ var y = 480;
 export class Hero {
 
     constructor(gameMap, hero, path) {
+        this.field = gameMap;
         this.hero = hero;
         this.path = path;
         this.i = 0;
@@ -50,16 +51,23 @@ export class Hero {
             return a;
         }
         if(arr.length > 0){
-          console.log(arr[0]);
-          console.log(a[0]);
+          //console.log(arr[0]);
+          //console.log(a[0]);
           if(a.length === 0){
-              console.log("55");
-              return null;
+
+              for(var i = 0; i < arr.length; i++ ){
+                if(this.field[arr[i].x][arr[i].y] == -1){
+                  arr.splice(-(arr.length-i));
+                  console.log(arr);
+                }
+              }
+              return arr;
           }
+
           a.splice(0, 1);
           //console.log(x + "; " + y);
           if(a[0].x != arr[0].parent.x && a[0].y != arr[0].parent.y){
-            console.log("err");
+            //console.log("err");
             a.unshift(arr[0].parent.parent);
           }
         }
