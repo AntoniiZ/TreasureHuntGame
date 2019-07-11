@@ -1,5 +1,4 @@
 import {config2} from "../config/config.js";
-
 export class MapGenerator {
     static fixed() {
         return [
@@ -37,7 +36,7 @@ export class MapGenerator {
                 }
                 if(i !== sizeY-1) {
                     if (map[i][j]) {
-                        if (Math.random() < 0.7 || i === 0 || j === 0 || j === sizeX-1) {
+                        if (Math.random() < 0.6 || i === 0 || j === 0 || j === sizeX-1) {
                             map[i][j] = -1;
                         } else {
                             map[i][j] = -3;

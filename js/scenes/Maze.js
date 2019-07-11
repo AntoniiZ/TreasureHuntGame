@@ -86,10 +86,10 @@ export class Maze extends Phaser.Scene {
         this.arr = [];
 
         this.input.on('gameobjectdown', this.activateTrap, this);
-        if(withRandom){
+        if(!withRandom){
           this.field = MapGenerator.randomized(8, 16);
         }else{
-          this.field = MapGenerator.fixed(8, 16);
+          this.field = MapGenerator.fixed();
         }
         console.log(this.field);
         this.iceBlocks = [];

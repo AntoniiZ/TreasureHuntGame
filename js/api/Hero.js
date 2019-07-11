@@ -50,16 +50,16 @@ export class Hero {
             return a;
         }
         if(arr.length > 0){
-          console.log(arr[0]);
-          console.log(a[0]);
+          //console.log(arr[0]);
           if(a.length === 0){
-              console.log("55");
+              //console.log("55");
               return null;
           }
+            //console.log(a[0]);
           a.splice(0, 1);
           //console.log(x + "; " + y);
           if(a[0].x != arr[0].parent.x && a[0].y != arr[0].parent.y){
-            console.log("err");
+            //console.log("err");
             a.unshift(arr[0].parent.parent);
           }
         }
