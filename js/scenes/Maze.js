@@ -5,6 +5,7 @@ import {Hero} from "../api/Hero.js";
 import {config2} from "../config/config.js";
 import {config} from "../config/game.js";
 import {MapGenerator} from "../api/MapGenerator.js";
+import {withRandom} from "../scenes/End.js";
 
 var x = 32;
 var y = 480;
@@ -78,14 +79,18 @@ export class Maze extends Phaser.Scene {
     }
 
     create() {
+        console.log(withRandom);
         score = 0;
         this.background = this.add.tileSprite(0, 0, config.width * 4, config.height * 4, "grass").setScale(0.5);
         this.activeTrap = null;
         this.arr = [];
 
         this.input.on('gameobjectdown', this.activateTrap, this);
-
-        this.field = MapGenerator.randomized(8, 16);
+        if(withRandom){
+          this.field = MapGenerator.randomized(8, 16);
+        }else{
+          this.field = MapGenerator.fixed(8, 16);
+        }
         console.log(this.field);
         this.iceBlocks = [];
 
@@ -145,7 +150,12 @@ export class Maze extends Phaser.Scene {
                 console.log(this.arr.length);
                 this.scene.start("end");
             } else {
-                score++;
+                if(!withRandom){
+                  score++;
+                }else{
+                  score = 512+96;
+                }
+
             }
         }
         this.meltingTimer++;
