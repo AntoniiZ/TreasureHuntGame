@@ -71,10 +71,6 @@ export class Maze extends Phaser.Scene {
             gameObject.setTexture("rock2");
             this.activeTrap = gameObject;
             this.arr = this.hero.getNewRoute(this.arr);
-            if(this.arr === null){
-             ///   this.scene.start("end");
-            }
-            this.i = 0;
         }
     }
 
@@ -150,12 +146,7 @@ export class Maze extends Phaser.Scene {
                 console.log(this.arr.length);
                 this.scene.start("end");
             } else {
-                if(!withRandom){
-                  score++;
-                }else{
-                  score = 512+96;
-                }
-
+                score++;
             }
         }
         this.meltingTimer++;

@@ -17,14 +17,19 @@ export class End extends Phaser.Scene{
 
     create(){
         this.background = this.add.tileSprite(0, 0, config.width * 4, config.height * 4, "stone").setScale(0.5);
-        if(!withRandom){
-          var label =this.add.text(350, 185, "Score: " + (score-512+96), {
-            font: "bold 32px Arial",
-            color: "white",
-            align: 'center'
-          }).setScale(2);
+        var s = score;
+
+        if(s-617 < 0){
+          s = 0;
+        }else{
+          s =score-617;
         }
 
+        var label =this.add.text(350, 185, "Score: " + (s), {
+          font: "bold 32px Arial",
+          color: "white",
+          align: 'center'
+        }).setScale(2);
 
         var playAgain = this.add.image(700, 400, 'playAgain1');
         this.playAgainRandom = this.add.image(300, 400, 'playAgainRandom01');
