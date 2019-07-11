@@ -8,9 +8,14 @@ describe('AStar', () => {
 
     beforeEach(() => {
         maze = [
-            [ 0,  0,  0, 0,-1],
-            [ 0, -1, -1, 0, 0],
-            [ 0,  0,  0, 0,-1],
+            [0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0, 0],
+            [0, -2, 0, 0, 0, -2, 0, 0, 0, -2, 0, 0, 0, -2, 0, 0],
+            [0, -1, -2, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -2, -1],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, -1, 0, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, -2, -1],
+            [0, -2, 0, -2, 0, 0, 0, 0, 0, -2, 0, 0, 0, -2, 0, 0],
+            [0, -1, -2, -1, 0, -1, 0, -1, -2, -1, -2, -1, -2, -1, 0, -1],
+            [0, 0, 0, -1, 0, 0, 0, -2, 0, 0, 0, -2, 0, -2, 0, 0]
         ];
         aStar = new AStar(maze);
         step = new Step(2, 3, 6, 7, 2, false);
@@ -39,8 +44,10 @@ describe('AStar', () => {
     });
 
     it("AStar -> findPath()", () => {
-        expect(aStar.findPath(0, 0, 1, 4).length).toBe(6);
-        expect(aStar.findPath(0, 0, 2, 2).length).toBe(5);
+        console.log(aStar);
+        expect(aStar.findPath(0, 0, 0, 2).length).toBe(13);
+        expect(aStar.findPath(0, 0, 0, 4).length).toBe(11);
+        expect(aStar.findPath(0, 0, 0, 100).length).toBe(0);
     });
 
     it("AStar -> reset()", () => {
@@ -56,7 +63,6 @@ describe('AStar', () => {
         let s2 = new Step(1, 0, 2, 0, 2, s1);
         let s3 = new Step(2, 1, null, null, 3, s2);
 
-        console.log(aStar.buildPath(s3, []));
         expect(aStar.buildPath(s3, []).length).toBe(3);
     });
 

@@ -31,10 +31,4 @@ describe('AStarMap', () => {
         expect(aStarMap.getNeighbors(0, 0)).toEqual([new Point(1, 0)]);
     });
 
-    it("AStarMap -> getField()", () => {
-        expect(aStarMap.getField(0, 0)).toBe(0);
-        expect(aStarMap.getField(1, 1)).toBe(-1);
-    });
-
-
 });
