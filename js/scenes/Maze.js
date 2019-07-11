@@ -82,10 +82,10 @@ export class Maze extends Phaser.Scene {
         this.arr = [];
 
         this.input.on('gameobjectdown', this.activateTrap, this);
-        if(!withRandom){
-          this.field = MapGenerator.randomized(8, 16);
-        }else{
-          this.field = MapGenerator.fixed();
+        if (!withRandom) {
+            this.field = MapGenerator.fixed();
+        } else {
+            this.field = MapGenerator.randomized(8, 16);
         }
         console.log(this.field);
         this.iceBlocks = [];
@@ -120,7 +120,7 @@ export class Maze extends Phaser.Scene {
     }
 
     update() {
-        if(this.arr !== null) {
+        if (this.arr !== null) {
             if (this.hero.getX() == x && this.hero.getY() == y) {
                 if (this.arr.length > 0) {
                     x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
