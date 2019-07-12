@@ -68,7 +68,6 @@ export class Maze extends Phaser.Scene {
     }
 
     create() {
-        console.log(withRandom);
         score = 0;
         this.background = this.add.tileSprite(0, 0, config.width * 4, config.height * 4, "grass").setScale(0.5);
         this.activeTrap = null;
@@ -80,7 +79,6 @@ export class Maze extends Phaser.Scene {
         }else{
             this.field = MapGenerator.randomized(8, 16);
         }
-        console.log(this.field);
         this.iceBlocks = [];
 
         for (let i = 0; i < 8; i++) {
@@ -138,7 +136,6 @@ export class Maze extends Phaser.Scene {
                 x = 32;
                 y = 480;
                 clearTimeout(this.stopedTrap);
-                console.log(this.arr.length);
                 this.scene.start("end");
             }
         }
