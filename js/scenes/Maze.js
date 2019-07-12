@@ -7,16 +7,15 @@ import {config} from "../config/game.js";
 import {MapGenerator} from "../api/MapGenerator.js";
 import {withRandom} from "../scenes/End.js";
 
-var x = 32;
-var y = 480;
 export var score = 0;
-var results = 0;
 export var fastestWay;
 
 export class Maze extends Phaser.Scene {
 
     constructor() {
         super("maze");
+        this.x = 32;
+        this.y = 480;
     }
 
     place(x, y, name) {
@@ -116,25 +115,23 @@ export class Maze extends Phaser.Scene {
                 this.arr = this.hero.getNewRoute(this.arr);
             }
 
-            if (this.hero.getX() == x && this.hero.getY() == y) {
+            if (this.hero.getX() == this.x && this.hero.getY() == this.y) {
                 if (this.arr.length > 0) {
                     score++;
-                    x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
-                    y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[0].x);
+                    this.x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
+                    this.y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[0].x);
                     this.arr.splice(0, 1);
                 }
             }
-            if (this.hero.getX() == x) {
-                this.hero.moveHeroY(y);
+            if (this.hero.getX() == this.x) {
+                this.hero.moveHeroY(this.y);
             } else {
-                this.hero.moveHeroX(x);
+                this.hero.moveHeroX(this.x);
             }
 
             if (this.hero.getX() == 992 && this.hero.getY() == 32) {
-                sessionStorage.setItem(results, score);
-                results++;
-                x = 32;
-                y = 480;
+                this.x = 32;
+                this.y = 480;
                 clearTimeout(this.stopedTrap);
                 this.scene.start("end");
             }
