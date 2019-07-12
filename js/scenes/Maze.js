@@ -11,6 +11,7 @@ var x = 32;
 var y = 480;
 export var score = 0;
 var results = 0;
+export var fastestWay;
 
 export class Maze extends Phaser.Scene {
 
@@ -26,13 +27,6 @@ export class Maze extends Phaser.Scene {
     }
 
     setTrap(x, y) {
-        /*var positionX = (x * 32) + 32 * (x - 1);
-        var positionY = (y * 32) + 32 * (y - 1);
-        var rock = this.add.sprite(positionX, positionY, 'rock').setScale(0.5);
-
-
-        var trap = new Trap(positionX, positionY, rock);
-        trap.get().setInteractive();*/
         this.place(x, y, 'rock').setInteractive();
     }
 
@@ -56,7 +50,6 @@ export class Maze extends Phaser.Scene {
 
             if (this.hero.getY() > gameObject.y - 64 && this.hero.getY() < gameObject.y + 64 &&
                 this.hero.getX() > gameObject.x - 64 && this.hero.getX() < gameObject.x + 64) {
-
                 return "Can't be activated!";
             }
 
@@ -114,9 +107,9 @@ export class Maze extends Phaser.Scene {
         this.path = new AStar(this.field);
         var hero = this.physics.add.sprite(32, config.height - 32, 'hero').setScale(0.5);
         this.hero = new Hero(this.field, hero, this.path);
-        this.i = 0;
         this.arr = this.hero.getNewRoute(this.arr);
         this.meltingTimer = 0;
+        fastestWay = this.arr.length;
     }
 
     update() {
@@ -127,6 +120,7 @@ export class Maze extends Phaser.Scene {
 
             if (this.hero.getX() == x && this.hero.getY() == y) {
                 if (this.arr.length > 0) {
+                    score++;
                     x = 32 + config2.GRID_CELL_SIZE * this.arr[0].y;
                     y = 480 - config2.GRID_CELL_SIZE * (7 - this.arr[0].x);
                     this.arr.splice(0, 1);
@@ -144,13 +138,8 @@ export class Maze extends Phaser.Scene {
                 x = 32;
                 y = 480;
                 clearTimeout(this.stopedTrap);
-                /*this.iceBlocks.forEach(ice => {
-                    ice.end();
-                });*/
                 console.log(this.arr.length);
                 this.scene.start("end");
-            } else {
-                score++;
             }
         }
         this.meltingTimer++;
