@@ -23,17 +23,9 @@ export class Ice extends Point {
       setTimeout(function(){
         if(t.state >= 1){
           t.ice.setTexture('ice'+t.state);
-          /*t.ice.destroy(true);
-          if(t.state > 1){
-            t.ice = t.maze.add.sprite(t.ice.x, t.ice.y, 'ice'+t.state).setScale(0.5);
-          }*/
           t.updateState();
         }
       }, ms);
 
     }
-
-    /*end(){
-        this.ice.destroy(true);
-    }*/
 }

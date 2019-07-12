@@ -1,4 +1,5 @@
 import {score} from "./Maze.js";
+import {fastestWay} from "./Maze.js";
 import {config} from "../config/game.js";
 
 export var withRandom = false;
@@ -18,12 +19,8 @@ export class End extends Phaser.Scene{
     create(){
         this.background = this.add.tileSprite(0, 0, config.width * 4, config.height * 4, "stone").setScale(0.5);
         var s = score;
-
-        if(s-617 < 0){
-          s = 0;
-        }else{
-          s =score-617;
-        }
+        s -= fastestWay;
+        s*=10;
 
         var label =this.add.text(350, 185, "Score: " + (s), {
           font: "bold 32px Arial",
